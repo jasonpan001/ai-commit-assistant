@@ -1,6 +1,6 @@
 {
   "name": "ai-commit-assistant",
-  "displayName": "ai-commit-assistant",
+  "displayName": "AI Commit Assistant",
   "description": "AI-powered Git commit message generator supporting Claude, OpenAI-compatible APIs, and custom commit conventions.",
   "version": "0.0.1",
   "engines": {
@@ -9,15 +9,51 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:aiCommit.generateMessage"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "ai-commit-assistant.helloWorld",
-        "title": "Hello World"
+        "command": "aiCommit.generateMessage",
+        "title": "AI Commit: Generate Message"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "AI Commit",
+      "properties": {
+        "aiCommit.provider": {
+          "type": "string",
+          "enum": [
+            "anthropic",
+            "openai-compatible"
+          ],
+          "enumDescriptions": [
+            "Anthropic Messages API",
+            "OpenAI-compatible Chat Completions API"
+          ],
+          "default": "openai-compatible",
+          "description": "LLM API provider used to generate commit messages."
+        },
+        "aiCommit.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Provider base URL. Leave empty to use the selected provider's default."
+        },
+        "aiCommit.apiKey": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "markdownDescription": "API key for the selected provider. This is sensitive data; store it only in trusted machine-local settings and never commit it to source control."
+        },
+        "aiCommit.model": {
+          "type": "string",
+          "default": "",
+          "description": "Model identifier sent to the selected provider."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

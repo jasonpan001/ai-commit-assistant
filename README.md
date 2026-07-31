@@ -1,71 +1,72 @@
-# ai-commit-assistant README
+# AI Commit Assistant
 
-This is the README for your extension "ai-commit-assistant". After writing up a brief description, we recommend including the following sections.
+根据当前 Git 仓库的 staged diff 调用 LLM，生成一条中文 Conventional Commit message，并复制到系统剪贴板。
 
-## Features
+默认格式：
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+```text
+type(scope): 中文描述
+```
 
-For example if there is an image subfolder under your extension project workspace:
+例如：
 
-\!\[feature X\]\(images/feature-x.png\)
+```text
+fix(rtc): 修复房间退出状态同步问题
+```
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## 使用方式
 
-## Requirements
+1. 在 VS Code 中打开 Git 仓库。
+2. 使用 `git add` 或 Source Control 面板暂存需要提交的变更。
+3. 配置 LLM Provider、API Key 和模型。
+4. 打开命令面板，执行 `AI Commit: Generate Message`。
+5. 检查剪贴板中的结果，再通过自己的 Git 工作流提交。
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+扩展不会执行 `git commit`、不会修改暂存区，也不会自动填写 Source Control 输入框。
 
-## Extension Settings
+## 配置
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+| 设置 | 必填 | 说明 |
+| --- | --- | --- |
+| `aiCommit.provider` | 是 | `anthropic` 或 `openai-compatible`，默认后者 |
+| `aiCommit.baseUrl` | 否 | API Base URL；留空使用 Provider 默认值 |
+| `aiCommit.apiKey` | 是 | API Key，按 machine scope 保存 |
+| `aiCommit.model` | 是 | Provider 接受的模型标识 |
 
-For example:
+OpenAI Compatible 示例：
 
-This extension contributes the following settings:
+```json
+{
+  "aiCommit.provider": "openai-compatible",
+  "aiCommit.baseUrl": "https://api.openai.com/v1",
+  "aiCommit.apiKey": "YOUR_API_KEY",
+  "aiCommit.model": "gpt-4.1-mini"
+}
+```
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+Anthropic 示例：
 
-## Known Issues
+```json
+{
+  "aiCommit.provider": "anthropic",
+  "aiCommit.baseUrl": "https://api.anthropic.com",
+  "aiCommit.apiKey": "YOUR_API_KEY",
+  "aiCommit.model": "claude-sonnet-4-20250514"
+}
+```
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+OpenAI-compatible 服务需要支持 `POST {baseUrl}/chat/completions`；Anthropic 服务需要支持 `POST {baseUrl}/v1/messages`。
 
-## Release Notes
+## 数据与凭证安全
 
-Users appreciate release notes as you update your extension.
+执行命令会把完整 staged diff 发送到配置的 LLM 地址。请只在组织策略允许时使用，并确保 Base URL 可信。
 
-### 1.0.0
+`aiCommit.apiKey` 是敏感配置。不要将包含真实密钥的 `.vscode/settings.json` 或用户设置文件提交到版本控制。扩展不会记录 API Key、staged diff、请求正文或 Provider 原始响应。
 
-Initial release of ...
+## MVP 限制
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+- 每次只处理一个仓库；多根工作区会优先使用当前编辑器所属工作区。
+- 不支持流式响应、重试、自定义 Prompt 或自定义提交格式。
+- 不对大 diff 做截断或摘要，超过 Git 缓冲区或模型上下文限制时会失败并提示。
+- Git diff 和 Provider 请求的超时时间固定为 30 秒。
+- 仅校验输出结构和中文描述，语义正确性仍需人工审核。
