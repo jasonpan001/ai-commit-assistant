@@ -1,7 +1,7 @@
 {
   "name": "ai-commit-assistant",
-  "displayName": "AI Commit Assistant",
-  "description": "AI-powered Git commit message generator supporting mainstream cloud and local LLM providers.",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.125.0"
@@ -13,15 +13,16 @@
     "onCommand:aiCommit.generateMessage"
   ],
   "main": "./dist/extension.js",
+  "l10n": "./l10n",
   "contributes": {
     "commands": [
       {
         "command": "aiCommit.generateMessage",
-        "title": "AI Commit: Generate Message"
+        "title": "%command.generateMessage.title%"
       }
     ],
     "configuration": {
-      "title": "AI Commit",
+      "title": "%configuration.title%",
       "properties": {
         "aiCommit.provider": {
           "type": "string",
@@ -41,38 +42,38 @@
             "lm-studio"
           ],
           "enumDescriptions": [
-            "Anthropic Messages API",
-            "OpenAI Chat Completions API",
-            "Custom OpenAI-compatible Chat Completions API",
-            "Google Gemini Generate Content API",
-            "Azure OpenAI Chat Completions API",
-            "DeepSeek OpenAI-compatible API",
-            "OpenRouter unified OpenAI-compatible API",
-            "Groq OpenAI-compatible API",
-            "xAI OpenAI-compatible API",
-            "Mistral OpenAI-compatible API",
-            "Together AI OpenAI-compatible API",
-            "Local Ollama OpenAI-compatible API",
-            "Local LM Studio OpenAI-compatible API"
+            "%configuration.provider.anthropic%",
+            "%configuration.provider.openai%",
+            "%configuration.provider.openaiCompatible%",
+            "%configuration.provider.gemini%",
+            "%configuration.provider.azureOpenai%",
+            "%configuration.provider.deepseek%",
+            "%configuration.provider.openrouter%",
+            "%configuration.provider.groq%",
+            "%configuration.provider.xai%",
+            "%configuration.provider.mistral%",
+            "%configuration.provider.together%",
+            "%configuration.provider.ollama%",
+            "%configuration.provider.lmStudio%"
           ],
           "default": "openai-compatible",
-          "description": "LLM API provider used to generate commit messages."
+          "description": "%configuration.provider.description%"
         },
         "aiCommit.baseUrl": {
           "type": "string",
           "default": "",
-          "description": "Provider base URL. Leave empty to use the selected provider's default."
+          "description": "%configuration.baseUrl.description%"
         },
         "aiCommit.apiKey": {
           "type": "string",
           "default": "",
           "scope": "machine",
-          "markdownDescription": "API key for the selected provider. This is sensitive data; store it only in trusted machine-local settings and never commit it to source control."
+          "markdownDescription": "%configuration.apiKey.description%"
         },
         "aiCommit.model": {
           "type": "string",
           "default": "",
-          "description": "Model identifier sent to the selected provider."
+          "description": "%configuration.model.description%"
         }
       }
     }

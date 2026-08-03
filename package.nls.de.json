@@ -1,0 +1,23 @@
+{
+  "extension.displayName": "KI-Commit-Assistent",
+  "extension.description": "Erstellt Conventional-Commit-Nachrichten mit gängigen Cloud- und lokalen LLM-Anbietern.",
+  "command.generateMessage.title": "KI-Commit: Nachricht erstellen",
+  "configuration.title": "KI-Commit",
+  "configuration.provider.description": "LLM-Anbieter zum Erstellen von Commit-Nachrichten.",
+  "configuration.baseUrl.description": "Basis-URL des Anbieters. Leer lassen, um den Standard des ausgewählten Anbieters zu verwenden.",
+  "configuration.apiKey.description": "API-Schlüssel des ausgewählten Anbieters. Dies sind vertrauliche Daten; speichern Sie sie nur in lokalen Einstellungen vertrauenswürdiger Geräte und niemals in der Versionsverwaltung.",
+  "configuration.model.description": "Modellkennung, die an den ausgewählten Anbieter gesendet wird.",
+  "configuration.provider.anthropic": "Anthropic Messages API",
+  "configuration.provider.openai": "OpenAI Chat Completions API",
+  "configuration.provider.openaiCompatible": "Benutzerdefinierte OpenAI-kompatible Chat Completions API",
+  "configuration.provider.gemini": "Google Gemini Generate Content API",
+  "configuration.provider.azureOpenai": "Azure OpenAI Chat Completions API",
+  "configuration.provider.deepseek": "OpenAI-kompatible DeepSeek API",
+  "configuration.provider.openrouter": "Einheitliche OpenAI-kompatible OpenRouter API",
+  "configuration.provider.groq": "OpenAI-kompatible Groq API",
+  "configuration.provider.xai": "OpenAI-kompatible xAI API",
+  "configuration.provider.mistral": "OpenAI-kompatible Mistral API",
+  "configuration.provider.together": "OpenAI-kompatible Together AI API",
+  "configuration.provider.ollama": "Lokale OpenAI-kompatible Ollama API",
+  "configuration.provider.lmStudio": "Lokale OpenAI-kompatible LM Studio API"
+}

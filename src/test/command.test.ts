@@ -16,7 +16,7 @@ suite('Generate command workflow', () => {
 		await executeGenerateMessageCommand(dependencies(state));
 
 		assert.deepStrictEqual(state.clipboardWrites, ['fix(core): 修复暂存区生成逻辑']);
-		assert.deepStrictEqual(state.informationMessages, ['已生成并复制：fix(core): 修复暂存区生成逻辑']);
+		assert.deepStrictEqual(state.informationMessages, ['Generated and copied: fix(core): 修复暂存区生成逻辑']);
 		assert.deepStrictEqual(state.errorMessages, []);
 		assert.strictEqual(state.repositoryRead, '/repo');
 		assert.strictEqual(state.providerCalls, 1);
@@ -49,7 +49,7 @@ suite('Generate command workflow', () => {
 		await executeGenerateMessageCommand(commandDependencies);
 
 		assert.deepStrictEqual(state.clipboardWrites, []);
-		assert.match(state.errorMessages[0], /格式无效/);
+		assert.match(state.errorMessages[0], /invalid commit message format/);
 	});
 
 	test('reports repository resolution failures before reading Git', async () => {
@@ -89,6 +89,7 @@ function dependencies(state: CommandState): GenerateCommandDependencies {
 	return {
 		resolveRepository: () => '/repo',
 		loadConfiguration: () => configuration,
+		getLocale: () => 'zh-cn',
 		readStagedDiff: async repository => {
 			state.repositoryRead = repository;
 			return 'diff';

@@ -1,0 +1,23 @@
+{
+  "extension.displayName": "AI Commit Assistant",
+  "extension.description": "Generate Conventional Commit messages with mainstream cloud and local LLM providers.",
+  "command.generateMessage.title": "AI Commit: Generate Message",
+  "configuration.title": "AI Commit",
+  "configuration.provider.description": "LLM provider used to generate commit messages.",
+  "configuration.baseUrl.description": "Provider base URL. Leave empty to use the selected provider's default.",
+  "configuration.apiKey.description": "API key for the selected provider. This is sensitive data; store it only in trusted machine-local settings and never commit it to source control.",
+  "configuration.model.description": "Model identifier sent to the selected provider.",
+  "configuration.provider.anthropic": "Anthropic Messages API",
+  "configuration.provider.openai": "OpenAI Chat Completions API",
+  "configuration.provider.openaiCompatible": "Custom OpenAI-compatible Chat Completions API",
+  "configuration.provider.gemini": "Google Gemini Generate Content API",
+  "configuration.provider.azureOpenai": "Azure OpenAI Chat Completions API",
+  "configuration.provider.deepseek": "DeepSeek OpenAI-compatible API",
+  "configuration.provider.openrouter": "OpenRouter unified OpenAI-compatible API",
+  "configuration.provider.groq": "Groq OpenAI-compatible API",
+  "configuration.provider.xai": "xAI OpenAI-compatible API",
+  "configuration.provider.mistral": "Mistral OpenAI-compatible API",
+  "configuration.provider.together": "Together AI OpenAI-compatible API",
+  "configuration.provider.ollama": "Local Ollama OpenAI-compatible API",
+  "configuration.provider.lmStudio": "Local LM Studio OpenAI-compatible API"
+}

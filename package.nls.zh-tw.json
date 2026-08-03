@@ -1,0 +1,23 @@
+{
+  "extension.displayName": "AI 提交助手",
+  "extension.description": "使用主流雲端與本機 LLM Provider 產生 Conventional Commit 提交訊息。",
+  "command.generateMessage.title": "AI 提交：產生提交訊息",
+  "configuration.title": "AI 提交",
+  "configuration.provider.description": "用於產生提交訊息的 LLM Provider。",
+  "configuration.baseUrl.description": "Provider 基礎 URL。留空則使用所選 Provider 的預設位址。",
+  "configuration.apiKey.description": "所選 Provider 的 API Key。這是敏感資料，請只儲存在可信任的本機設定中，切勿提交至版本控制。",
+  "configuration.model.description": "傳送給所選 Provider 的模型識別碼。",
+  "configuration.provider.anthropic": "Anthropic Messages API",
+  "configuration.provider.openai": "OpenAI Chat Completions API",
+  "configuration.provider.openaiCompatible": "自訂 OpenAI 相容 Chat Completions API",
+  "configuration.provider.gemini": "Google Gemini Generate Content API",
+  "configuration.provider.azureOpenai": "Azure OpenAI Chat Completions API",
+  "configuration.provider.deepseek": "DeepSeek OpenAI 相容 API",
+  "configuration.provider.openrouter": "OpenRouter 統一 OpenAI 相容 API",
+  "configuration.provider.groq": "Groq OpenAI 相容 API",
+  "configuration.provider.xai": "xAI OpenAI 相容 API",
+  "configuration.provider.mistral": "Mistral OpenAI 相容 API",
+  "configuration.provider.together": "Together AI OpenAI 相容 API",
+  "configuration.provider.ollama": "本機 Ollama OpenAI 相容 API",
+  "configuration.provider.lmStudio": "本機 LM Studio OpenAI 相容 API"
+}

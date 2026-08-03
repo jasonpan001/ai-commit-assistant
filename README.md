@@ -1,11 +1,11 @@
 # AI Commit Assistant
 
-根据当前 Git 仓库的 staged diff 调用 LLM，生成一条中文 Conventional Commit message，并复制到系统剪贴板。
+根据当前 Git 仓库的 staged diff 调用 LLM，生成一条与 VS Code 显示语言一致的 Conventional Commit message，并复制到系统剪贴板。
 
 默认格式：
 
 ```text
-type(scope): 中文描述
+type(scope): description
 ```
 
 例如：
@@ -23,6 +23,20 @@ fix(rtc): 修复房间退出状态同步问题
 5. 检查剪贴板中的结果，再通过自己的 Git 工作流提交。
 
 扩展不会执行 `git commit`、不会修改暂存区，也不会自动填写 Source Control 输入框。
+
+## 多语言
+
+扩展界面和运行时提示会跟随 VS Code 的显示语言，生成结果中的 description 也会使用相同语言。当前支持：
+
+- English
+- 简体中文、繁體中文
+- 日本語、한국어
+- Español、Français、Deutsch
+- Português (Brasil)、Русский
+
+通过命令面板执行 `Configure Display Language`，安装或选择对应的 VS Code 语言包，然后按 VS Code 提示重新加载窗口即可切换。未支持的显示语言会回退到英文。
+
+生成结果始终保持 `type(scope): description` 结构；`type` 和 `scope` 使用英文标识，只有 description 跟随显示语言。
 
 ## 配置
 
@@ -126,5 +140,5 @@ LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服
 - 仅支持非流式文本生成，不支持重试、故障转移、自定义 Prompt 或自定义提交格式。
 - 不对大 diff 做截断或摘要，超过 Git 缓冲区或模型上下文限制时会失败并提示。
 - Git diff 和 Provider 请求的超时时间固定为 30 秒。
-- 仅校验输出结构和中文描述，语义正确性仍需人工审核。
+- 仅校验单行 Conventional Commit 输出结构，语义和描述语言正确性仍需人工审核。
 - 暂不支持 Amazon Bedrock SigV4、Google Vertex AI OAuth 或云厂商工作负载身份认证。

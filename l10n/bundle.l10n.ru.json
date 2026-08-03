@@ -1,0 +1,17 @@
+{
+  "Generated and copied: {0}": "Сообщение создано и скопировано: {0}",
+  "Failed to generate a commit message. Check the configuration and network, then try again.": "Не удалось создать сообщение коммита. Проверьте конфигурацию и сеть, затем повторите попытку.",
+  "The LLM returned an invalid commit message format. Try again.": "LLM вернула недопустимый формат сообщения коммита. Повторите попытку.",
+  "Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.": "Не удалось прочитать индекс Git. Убедитесь, что текущий каталог является допустимым репозиторием и Git доступен.",
+  "The staging area has no changes. Stage changes first.": "В индексе нет изменений. Сначала добавьте изменения в индекс.",
+  "No workspace found. Open a Git repository first.": "Рабочая область не найдена. Сначала откройте репозиторий Git.",
+  "Unable to determine the repository. Focus a file in the target workspace and try again.": "Не удалось определить репозиторий. Выберите файл в нужной рабочей области и повторите попытку.",
+  "Unsupported aiCommit.provider. Choose one of: {0}.": "aiCommit.provider не поддерживается. Выберите одно из значений: {0}.",
+  "Missing aiCommit.apiKey configuration.": "Отсутствует настройка aiCommit.apiKey.",
+  "Missing aiCommit.model configuration.": "Отсутствует настройка aiCommit.model.",
+  "Provider {0} requires aiCommit.baseUrl.": "Для поставщика {0} требуется aiCommit.baseUrl.",
+  "{0} returned an unrecognized response.": "{0} вернул нераспознанный ответ.",
+  "{0} request failed. Check the network and aiCommit.baseUrl.": "Запрос к {0} завершился ошибкой. Проверьте сеть и aiCommit.baseUrl.",
+  "{0} request failed (HTTP {1}).": "Запрос к {0} завершился ошибкой (HTTP {1}).",
+  "{0} returned invalid JSON.": "{0} вернул недопустимый JSON."
+}

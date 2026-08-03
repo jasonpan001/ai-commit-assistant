@@ -1,6 +1,7 @@
 import { AiCommitConfiguration } from './config';
 import { CommitPrompt } from './commitMessage';
 import { UserFacingError } from './errors';
+import { localize } from './localization';
 import { AuthenticationStrategy, getProviderDefinition, ProviderDefinition } from './providerCatalog';
 
 export interface LlmProvider {
@@ -77,7 +78,7 @@ class AnthropicProvider implements LlmProvider {
 			: '';
 
 		if (!content) {
-			throw new UserFacingError(`${this.definition.label} 返回了无法识别的响应。`);
+			throw new UserFacingError(localize('unrecognizedProviderResponse', this.definition.label));
 		}
 
 		return content;
@@ -117,7 +118,7 @@ class OpenAiCompatibleProvider implements LlmProvider {
 			: undefined;
 
 		if (typeof message !== 'string' || !message.trim()) {
-			throw new UserFacingError(`${this.definition.label} 返回了无法识别的响应。`);
+			throw new UserFacingError(localize('unrecognizedProviderResponse', this.definition.label));
 		}
 
 		return message;
@@ -162,7 +163,7 @@ class GeminiProvider implements LlmProvider {
 			: '';
 
 		if (!text) {
-			throw new UserFacingError(`${this.definition.label} 返回了无法识别的响应。`);
+			throw new UserFacingError(localize('unrecognizedProviderResponse', this.definition.label));
 		}
 
 		return text;
@@ -210,17 +211,17 @@ async function requestJson(
 			signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
 		});
 	} catch {
-		throw new UserFacingError(`${providerName} 请求失败，请检查网络和 aiCommit.baseUrl。`);
+		throw new UserFacingError(localize('providerRequestFailed', providerName));
 	}
 
 	if (!response.ok) {
-		throw new UserFacingError(`${providerName} 请求失败（HTTP ${response.status}）。`);
+		throw new UserFacingError(localize('providerHttpFailed', providerName, response.status));
 	}
 
 	try {
 		return await response.json();
 	} catch {
-		throw new UserFacingError(`${providerName} 返回了无效的 JSON。`);
+		throw new UserFacingError(localize('providerInvalidJson', providerName));
 	}
 }
 
