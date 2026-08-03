@@ -1,7 +1,7 @@
 {
   "name": "ai-commit-assistant",
   "displayName": "AI Commit Assistant",
-  "description": "AI-powered Git commit message generator supporting Claude, OpenAI-compatible APIs, and custom commit conventions.",
+  "description": "AI-powered Git commit message generator supporting mainstream cloud and local LLM providers.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.125.0"
@@ -27,11 +27,33 @@
           "type": "string",
           "enum": [
             "anthropic",
-            "openai-compatible"
+            "openai",
+            "openai-compatible",
+            "gemini",
+            "azure-openai",
+            "deepseek",
+            "openrouter",
+            "groq",
+            "xai",
+            "mistral",
+            "together",
+            "ollama",
+            "lm-studio"
           ],
           "enumDescriptions": [
             "Anthropic Messages API",
-            "OpenAI-compatible Chat Completions API"
+            "OpenAI Chat Completions API",
+            "Custom OpenAI-compatible Chat Completions API",
+            "Google Gemini Generate Content API",
+            "Azure OpenAI Chat Completions API",
+            "DeepSeek OpenAI-compatible API",
+            "OpenRouter unified OpenAI-compatible API",
+            "Groq OpenAI-compatible API",
+            "xAI OpenAI-compatible API",
+            "Mistral OpenAI-compatible API",
+            "Together AI OpenAI-compatible API",
+            "Local Ollama OpenAI-compatible API",
+            "Local LM Studio OpenAI-compatible API"
           ],
           "default": "openai-compatible",
           "description": "LLM API provider used to generate commit messages."
