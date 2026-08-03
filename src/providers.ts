@@ -1,6 +1,7 @@
 import { AiCommitConfiguration } from './config';
 import { CommitPrompt } from './commitMessage';
 import { UserFacingError } from './errors';
+import { AuthenticationStrategy, getProviderDefinition, ProviderDefinition } from './providerCatalog';
 
 export interface LlmProvider {
 	generate(prompt: CommitPrompt): Promise<string>;
@@ -27,11 +28,15 @@ export function createLlmProvider(
 	configuration: AiCommitConfiguration,
 	fetchClient: FetchClient = defaultFetchClient,
 ): LlmProvider {
-	if (configuration.provider === 'anthropic') {
-		return new AnthropicProvider(configuration, fetchClient);
+	const definition = getProviderDefinition(configuration.provider);
+	switch (definition.protocol) {
+		case 'anthropic-messages':
+			return new AnthropicProvider(configuration, definition, fetchClient);
+		case 'gemini-generate-content':
+			return new GeminiProvider(configuration, definition, fetchClient);
+		case 'openai-chat':
+			return new OpenAiCompatibleProvider(configuration, definition, fetchClient);
 	}
-
-	return new OpenAiCompatibleProvider(configuration, fetchClient);
 }
 
 export function buildEndpoint(baseUrl: string, endpointPath: string): string {
@@ -41,20 +46,17 @@ export function buildEndpoint(baseUrl: string, endpointPath: string): string {
 class AnthropicProvider implements LlmProvider {
 	constructor(
 		private readonly configuration: AiCommitConfiguration,
+		private readonly definition: ProviderDefinition,
 		private readonly fetchClient: FetchClient,
 	) {}
 
 	async generate(prompt: CommitPrompt): Promise<string> {
 		const response = await requestJson(
-			'Anthropic',
+			this.definition.label,
 			buildEndpoint(this.configuration.baseUrl, 'v1/messages'),
 			{
 				method: 'POST',
-				headers: {
-					'content-type': 'application/json',
-					'x-api-key': this.configuration.apiKey,
-					'anthropic-version': '2023-06-01',
-				},
+				headers: buildHeaders(this.definition.authentication, this.configuration.apiKey),
 				body: JSON.stringify({
 					model: this.configuration.model,
 					max_tokens: 128,
@@ -75,7 +77,7 @@ class AnthropicProvider implements LlmProvider {
 			: '';
 
 		if (!content) {
-			throw new UserFacingError('Anthropic 返回了无法识别的响应。');
+			throw new UserFacingError(`${this.definition.label} 返回了无法识别的响应。`);
 		}
 
 		return content;
@@ -85,19 +87,17 @@ class AnthropicProvider implements LlmProvider {
 class OpenAiCompatibleProvider implements LlmProvider {
 	constructor(
 		private readonly configuration: AiCommitConfiguration,
+		private readonly definition: ProviderDefinition,
 		private readonly fetchClient: FetchClient,
 	) {}
 
 	async generate(prompt: CommitPrompt): Promise<string> {
 		const response = await requestJson(
-			'OpenAI Compatible',
+			this.definition.label,
 			buildEndpoint(this.configuration.baseUrl, 'chat/completions'),
 			{
 				method: 'POST',
-				headers: {
-					'content-type': 'application/json',
-					authorization: `Bearer ${this.configuration.apiKey}`,
-				},
+				headers: buildHeaders(this.definition.authentication, this.configuration.apiKey),
 				body: JSON.stringify({
 					model: this.configuration.model,
 					messages: [
@@ -117,11 +117,84 @@ class OpenAiCompatibleProvider implements LlmProvider {
 			: undefined;
 
 		if (typeof message !== 'string' || !message.trim()) {
-			throw new UserFacingError('OpenAI Compatible 返回了无法识别的响应。');
+			throw new UserFacingError(`${this.definition.label} 返回了无法识别的响应。`);
 		}
 
 		return message;
 	}
+}
+
+class GeminiProvider implements LlmProvider {
+	constructor(
+		private readonly configuration: AiCommitConfiguration,
+		private readonly definition: ProviderDefinition,
+		private readonly fetchClient: FetchClient,
+	) {}
+
+	async generate(prompt: CommitPrompt): Promise<string> {
+		const model = this.configuration.model.replace(/^models\//, '');
+		const response = await requestJson(
+			this.definition.label,
+			buildEndpoint(this.configuration.baseUrl, `models/${encodeURIComponent(model)}:generateContent`),
+			{
+				method: 'POST',
+				headers: buildHeaders(this.definition.authentication, this.configuration.apiKey),
+				body: JSON.stringify({
+					systemInstruction: { parts: [{ text: prompt.system }] },
+					contents: [{ role: 'user', parts: [{ text: prompt.user }] }],
+					generationConfig: { maxOutputTokens: 128 },
+				}),
+			},
+			this.fetchClient,
+		);
+
+		const firstCandidate = isRecord(response) && Array.isArray(response.candidates)
+			? response.candidates[0]
+			: undefined;
+		const content = isRecord(firstCandidate) ? firstCandidate.content : undefined;
+		const text = isRecord(content) && Array.isArray(content.parts)
+			? content.parts
+				.filter(isRecord)
+				.filter(part => typeof part.text === 'string')
+				.map(part => part.text as string)
+				.join('')
+				.trim()
+			: '';
+
+		if (!text) {
+			throw new UserFacingError(`${this.definition.label} 返回了无法识别的响应。`);
+		}
+
+		return text;
+	}
+}
+
+export function buildHeaders(
+	authentication: AuthenticationStrategy,
+	apiKey: string,
+): Record<string, string> {
+	const headers: Record<string, string> = { 'content-type': 'application/json' };
+
+	switch (authentication) {
+		case 'bearer':
+		case 'optional-bearer':
+			if (apiKey) {
+				headers.authorization = `Bearer ${apiKey}`;
+			}
+			break;
+		case 'anthropic-key':
+			headers['x-api-key'] = apiKey;
+			headers['anthropic-version'] = '2023-06-01';
+			break;
+		case 'gemini-key':
+			headers['x-goog-api-key'] = apiKey;
+			break;
+		case 'azure-key':
+			headers['api-key'] = apiKey;
+			break;
+	}
+
+	return headers;
 }
 
 async function requestJson(

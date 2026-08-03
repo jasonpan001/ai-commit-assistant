@@ -1,8 +1,12 @@
 import { UserFacingError } from './errors';
+import {
+	getProviderDefinition,
+	isProviderName,
+	ProviderName,
+	SUPPORTED_PROVIDERS,
+} from './providerCatalog';
 
-export const SUPPORTED_PROVIDERS = ['anthropic', 'openai-compatible'] as const;
-
-export type ProviderName = typeof SUPPORTED_PROVIDERS[number];
+export { ProviderName, SUPPORTED_PROVIDERS } from './providerCatalog';
 
 export interface AiCommitConfiguration {
 	provider: ProviderName;
@@ -15,19 +19,15 @@ export interface SettingsReader {
 	get<T>(section: string): T | undefined;
 }
 
-const DEFAULT_BASE_URLS: Record<ProviderName, string> = {
-	anthropic: 'https://api.anthropic.com',
-	'openai-compatible': 'https://api.openai.com/v1',
-};
-
 export function loadConfiguration(settings: SettingsReader): AiCommitConfiguration {
 	const providerValue = readString(settings, 'provider') || 'openai-compatible';
 	if (!isProviderName(providerValue)) {
-		throw new UserFacingError('配置 aiCommit.provider 不受支持，请选择 anthropic 或 openai-compatible。');
+		throw new UserFacingError(`配置 aiCommit.provider 不受支持，请选择：${SUPPORTED_PROVIDERS.join('、')}。`);
 	}
+	const provider = getProviderDefinition(providerValue);
 
 	const apiKey = readString(settings, 'apiKey');
-	if (!apiKey) {
+	if (provider.requiresApiKey && !apiKey) {
 		throw new UserFacingError('缺少配置 aiCommit.apiKey。');
 	}
 
@@ -35,10 +35,14 @@ export function loadConfiguration(settings: SettingsReader): AiCommitConfigurati
 	if (!model) {
 		throw new UserFacingError('缺少配置 aiCommit.model。');
 	}
+	const baseUrl = readString(settings, 'baseUrl') || provider.defaultBaseUrl;
+	if (!baseUrl) {
+		throw new UserFacingError(`Provider ${provider.label} 缺少配置 aiCommit.baseUrl。`);
+	}
 
 	return {
 		provider: providerValue,
-		baseUrl: readString(settings, 'baseUrl') || DEFAULT_BASE_URLS[providerValue],
+		baseUrl,
 		apiKey,
 		model,
 	};
@@ -47,8 +51,4 @@ export function loadConfiguration(settings: SettingsReader): AiCommitConfigurati
 function readString(settings: SettingsReader, section: string): string {
 	const value = settings.get<unknown>(section);
 	return typeof value === 'string' ? value.trim() : '';
-}
-
-function isProviderName(value: string): value is ProviderName {
-	return SUPPORTED_PROVIDERS.some(provider => provider === value);
 }
