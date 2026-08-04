@@ -19,5 +19,17 @@
   "configuration.provider.mistral": "Mistral OpenAI 호환 API",
   "configuration.provider.together": "Together AI OpenAI 호환 API",
   "configuration.provider.ollama": "로컬 Ollama OpenAI 호환 API",
-  "configuration.provider.lmStudio": "로컬 LM Studio OpenAI 호환 API"
+  "configuration.provider.lmStudio": "로컬 LM Studio OpenAI 호환 API",
+  "configuration.commitLanguage.description": "생성되는 커밋 설명에 사용할 언어입니다. 자동은 VS Code 표시 언어를 따릅니다.",
+  "configuration.commitLanguage.auto": "자동(VS Code 표시 언어 따름)",
+  "configuration.commitLanguage.en": "영어",
+  "configuration.commitLanguage.zhCn": "중국어 간체",
+  "configuration.commitLanguage.zhTw": "중국어 번체",
+  "configuration.commitLanguage.ja": "일본어",
+  "configuration.commitLanguage.ko": "한국어",
+  "configuration.commitLanguage.es": "스페인어",
+  "configuration.commitLanguage.fr": "프랑스어",
+  "configuration.commitLanguage.de": "독일어",
+  "configuration.commitLanguage.ptBr": "포르투갈어(브라질)",
+  "configuration.commitLanguage.ru": "러시아어"
 }

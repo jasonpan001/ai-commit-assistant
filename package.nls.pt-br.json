@@ -19,5 +19,17 @@
   "configuration.provider.mistral": "API da Mistral compatível com OpenAI",
   "configuration.provider.together": "API da Together AI compatível com OpenAI",
   "configuration.provider.ollama": "API local do Ollama compatível com OpenAI",
-  "configuration.provider.lmStudio": "API local do LM Studio compatível com OpenAI"
+  "configuration.provider.lmStudio": "API local do LM Studio compatível com OpenAI",
+  "configuration.commitLanguage.description": "Idioma usado nas descrições de commit geradas. O modo automático segue o idioma de exibição do VS Code.",
+  "configuration.commitLanguage.auto": "Automático (seguir o idioma do VS Code)",
+  "configuration.commitLanguage.en": "Inglês",
+  "configuration.commitLanguage.zhCn": "Chinês simplificado",
+  "configuration.commitLanguage.zhTw": "Chinês tradicional",
+  "configuration.commitLanguage.ja": "Japonês",
+  "configuration.commitLanguage.ko": "Coreano",
+  "configuration.commitLanguage.es": "Espanhol",
+  "configuration.commitLanguage.fr": "Francês",
+  "configuration.commitLanguage.de": "Alemão",
+  "configuration.commitLanguage.ptBr": "Português (Brasil)",
+  "configuration.commitLanguage.ru": "Russo"
 }

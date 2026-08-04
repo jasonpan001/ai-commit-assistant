@@ -1,5 +1,9 @@
 import { UserFacingError } from './errors';
-import { localize } from './localization';
+import {
+	CommitLanguagePreference,
+	isCommitLanguagePreference,
+	localize,
+} from './localization';
 import {
 	getProviderDefinition,
 	isProviderName,
@@ -14,6 +18,7 @@ export interface AiCommitConfiguration {
 	baseUrl: string;
 	apiKey: string;
 	model: string;
+	commitLanguage: CommitLanguagePreference;
 }
 
 export interface SettingsReader {
@@ -46,7 +51,13 @@ export function loadConfiguration(settings: SettingsReader): AiCommitConfigurati
 		baseUrl,
 		apiKey,
 		model,
+		commitLanguage: readCommitLanguage(settings),
 	};
+}
+
+function readCommitLanguage(settings: SettingsReader): CommitLanguagePreference {
+	const value = readString(settings, 'commitLanguage');
+	return isCommitLanguagePreference(value) ? value : 'auto';
 }
 
 function readString(settings: SettingsReader, section: string): string {

@@ -21,7 +21,10 @@ export async function executeGenerateMessageCommand(dependencies: GenerateComman
 		const configuration = dependencies.loadConfiguration();
 		const diff = await dependencies.readStagedDiff(repository);
 		const provider = dependencies.createProvider(configuration);
-		const outputLanguage = resolveCommitLanguage(dependencies.getLocale());
+		const outputLanguage = resolveCommitLanguage(
+			dependencies.getLocale(),
+			configuration.commitLanguage,
+		);
 		const rawMessage = await provider.generate(buildCommitPrompt(diff, outputLanguage));
 		const message = normalizeCommitMessage(rawMessage);
 

@@ -197,6 +197,7 @@ function configuration(
 		baseUrl: 'https://provider.example///',
 		apiKey: 'sensitive-key',
 		model: 'test-model',
+		commitLanguage: 'auto',
 		...overrides,
 	};
 }
