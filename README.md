@@ -36,13 +36,16 @@ fix(rtc): 修复房间退出状态同步问题
 
 通过命令面板执行 `Configure Display Language`，安装或选择对应的 VS Code 语言包，然后按 VS Code 提示重新加载窗口即可切换。未支持的显示语言会回退到英文。
 
-生成结果始终保持 `type(scope): description` 结构；`type` 和 `scope` 使用英文标识，只有 description 跟随显示语言。
+如果希望界面语言和 Commit description 使用不同语言，可通过 `aiCommit.commitLanguage` 显式选择。默认值 `auto` 表示跟随 VS Code 显示语言；显式选择只影响 Commit description，不会改变设置页、命令或通知语言。例如，英文界面选择 `zh-cn` 后会生成中文 description。
+
+生成结果始终保持 `type(scope): description` 结构；`type` 和 `scope` 使用英文标识，只有 description 跟随所选 Commit 语言。
 
 ## 配置
 
 | 设置 | 必填 | 说明 |
 | --- | --- | --- |
 | `aiCommit.provider` | 是 | LLM Provider，默认 `openai-compatible` |
+| `aiCommit.commitLanguage` | 否 | Commit description 语言，默认 `auto`；支持在 User 或 Workspace 设置中覆盖 |
 | `aiCommit.baseUrl` | 视 Provider 而定 | 留空使用预设地址；Azure OpenAI 必填 |
 | `aiCommit.apiKey` | 视 Provider 而定 | 云端 Provider 必填；Ollama、LM Studio 可留空；按 machine scope 保存 |
 | `aiCommit.model` | 是 | Provider 接受的模型或 Azure 部署标识 |
@@ -123,6 +126,18 @@ Ollama 默认连接本机服务，不要求 API Key：
 LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服务启用了 Bearer Token，可同时配置 `aiCommit.apiKey`。
 
 用户配置的 `aiCommit.baseUrl` 始终优先于预设地址，可用于企业代理、私有部署或兼容网关。
+
+### Commit 语言示例
+
+以下配置会保持 VS Code 界面语言不变，同时要求 LLM 生成简体中文 description：
+
+```json
+{
+  "aiCommit.commitLanguage": "zh-cn"
+}
+```
+
+可选值为 `auto`、`en`、`zh-cn`、`zh-tw`、`ja`、`ko`、`es`、`fr`、`de`、`pt-br` 和 `ru`。Workspace 设置遵循 VS Code 原生配置优先级，可覆盖 User 设置。
 
 ## 数据与凭证安全
 

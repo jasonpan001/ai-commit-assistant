@@ -19,5 +19,17 @@
   "configuration.provider.mistral": "Mistral OpenAI 兼容 API",
   "configuration.provider.together": "Together AI OpenAI 兼容 API",
   "configuration.provider.ollama": "本地 Ollama OpenAI 兼容 API",
-  "configuration.provider.lmStudio": "本地 LM Studio OpenAI 兼容 API"
+  "configuration.provider.lmStudio": "本地 LM Studio OpenAI 兼容 API",
+  "configuration.commitLanguage.description": "生成的提交描述所使用的语言。自动模式会跟随 VS Code 显示语言。",
+  "configuration.commitLanguage.auto": "自动（跟随 VS Code 显示语言）",
+  "configuration.commitLanguage.en": "英语",
+  "configuration.commitLanguage.zhCn": "简体中文",
+  "configuration.commitLanguage.zhTw": "繁体中文",
+  "configuration.commitLanguage.ja": "日语",
+  "configuration.commitLanguage.ko": "韩语",
+  "configuration.commitLanguage.es": "西班牙语",
+  "configuration.commitLanguage.fr": "法语",
+  "configuration.commitLanguage.de": "德语",
+  "configuration.commitLanguage.ptBr": "葡萄牙语（巴西）",
+  "configuration.commitLanguage.ru": "俄语"
 }

@@ -59,6 +59,38 @@
           "default": "openai-compatible",
           "description": "%configuration.provider.description%"
         },
+        "aiCommit.commitLanguage": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "en",
+            "zh-cn",
+            "zh-tw",
+            "ja",
+            "ko",
+            "es",
+            "fr",
+            "de",
+            "pt-br",
+            "ru"
+          ],
+          "enumDescriptions": [
+            "%configuration.commitLanguage.auto%",
+            "%configuration.commitLanguage.en%",
+            "%configuration.commitLanguage.zhCn%",
+            "%configuration.commitLanguage.zhTw%",
+            "%configuration.commitLanguage.ja%",
+            "%configuration.commitLanguage.ko%",
+            "%configuration.commitLanguage.es%",
+            "%configuration.commitLanguage.fr%",
+            "%configuration.commitLanguage.de%",
+            "%configuration.commitLanguage.ptBr%",
+            "%configuration.commitLanguage.ru%"
+          ],
+          "default": "auto",
+          "scope": "window",
+          "description": "%configuration.commitLanguage.description%"
+        },
         "aiCommit.baseUrl": {
           "type": "string",
           "default": "",

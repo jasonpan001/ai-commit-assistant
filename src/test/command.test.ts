@@ -8,6 +8,7 @@ const configuration: AiCommitConfiguration = {
 	baseUrl: 'https://provider.example/v1',
 	apiKey: 'key',
 	model: 'model',
+	commitLanguage: 'zh-cn',
 };
 
 suite('Generate command workflow', () => {
@@ -20,6 +21,7 @@ suite('Generate command workflow', () => {
 		assert.deepStrictEqual(state.errorMessages, []);
 		assert.strictEqual(state.repositoryRead, '/repo');
 		assert.strictEqual(state.providerCalls, 1);
+		assert.match(state.promptSystem ?? '', /Simplified Chinese/);
 	});
 
 	for (const failure of [
@@ -73,6 +75,7 @@ interface CommandState {
 	errorMessages: string[];
 	repositoryRead: string | undefined;
 	providerCalls: number;
+	promptSystem: string | undefined;
 }
 
 function createState(): CommandState {
@@ -82,6 +85,7 @@ function createState(): CommandState {
 		errorMessages: [],
 		repositoryRead: undefined,
 		providerCalls: 0,
+		promptSystem: undefined,
 	};
 }
 
@@ -89,14 +93,15 @@ function dependencies(state: CommandState): GenerateCommandDependencies {
 	return {
 		resolveRepository: () => '/repo',
 		loadConfiguration: () => configuration,
-		getLocale: () => 'zh-cn',
+		getLocale: () => 'en',
 		readStagedDiff: async repository => {
 			state.repositoryRead = repository;
 			return 'diff';
 		},
 		createProvider: () => ({
-			generate: async () => {
+			generate: async prompt => {
 				state.providerCalls += 1;
+				state.promptSystem = prompt.system;
 				return 'fix(core): 修复暂存区生成逻辑';
 			},
 		}),

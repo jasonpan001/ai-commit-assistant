@@ -36,6 +36,27 @@ suite('Configuration', () => {
 		const configuration = loadConfiguration(settings({ apiKey: 'key', model: 'model' }));
 
 		assert.strictEqual(configuration.provider, 'openai-compatible');
+		assert.strictEqual(configuration.commitLanguage, 'auto');
+	});
+
+	test('accepts a supported commit language preference', () => {
+		const configuration = loadConfiguration(settings({
+			apiKey: 'key',
+			model: 'model',
+			commitLanguage: 'zh-cn',
+		}));
+
+		assert.strictEqual(configuration.commitLanguage, 'zh-cn');
+	});
+
+	test('falls back to auto for an unsupported commit language preference', () => {
+		const configuration = loadConfiguration(settings({
+			apiKey: 'key',
+			model: 'model',
+			commitLanguage: 'unknown',
+		}));
+
+		assert.strictEqual(configuration.commitLanguage, 'auto');
 	});
 
 	test('uses a trimmed custom base URL instead of the provider default', () => {

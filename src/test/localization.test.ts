@@ -1,7 +1,12 @@
 import * as assert from 'node:assert';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { RUNTIME_MESSAGES, resolveCommitLanguage, SUPPORTED_LOCALES } from '../localization';
+import {
+	RUNTIME_MESSAGES,
+	resolveCommitLanguage,
+	SUPPORTED_COMMIT_LANGUAGES,
+	SUPPORTED_LOCALES,
+} from '../localization';
 
 const projectRoot = resolve(__dirname, '../..');
 
@@ -27,6 +32,12 @@ suite('Localization', () => {
 		for (const [locale, expected] of cases) {
 			assert.strictEqual(resolveCommitLanguage(locale), expected, locale);
 		}
+	});
+
+	test('uses an explicit commit language instead of the VS Code locale', () => {
+		assert.strictEqual(resolveCommitLanguage('en', 'zh-cn'), 'Simplified Chinese');
+		assert.strictEqual(resolveCommitLanguage('zh-cn', 'en'), 'English');
+		assert.strictEqual(resolveCommitLanguage('fr', 'ja'), 'Japanese');
 	});
 
 	test('keeps manifest localization keys aligned', () => {
@@ -65,7 +76,35 @@ suite('Localization', () => {
 			assert.ok(Object.hasOwn(manifestMessages, key), key);
 		}
 	});
+
+	test('declares the complete commit language setting in the manifest', () => {
+		const packageJson = JSON.parse(
+			readFileSync(resolve(projectRoot, 'package.json'), 'utf8'),
+		) as PackageManifest;
+		const setting = packageJson.contributes.configuration.properties['aiCommit.commitLanguage'];
+
+		assert.deepStrictEqual(setting.enum, [...SUPPORTED_COMMIT_LANGUAGES]);
+		assert.strictEqual(setting.enumDescriptions.length, SUPPORTED_COMMIT_LANGUAGES.length);
+		assert.ok(setting.enumDescriptions.every(description => /^%[^%]+%$/.test(description)));
+		assert.strictEqual(setting.default, 'auto');
+		assert.strictEqual(setting.scope, 'window');
+	});
 });
+
+interface PackageManifest {
+	contributes: {
+		configuration: {
+			properties: {
+				'aiCommit.commitLanguage': {
+					enum: string[];
+					enumDescriptions: string[];
+					default: string;
+					scope: string;
+				};
+			};
+		};
+	};
+}
 
 function localizedLocales(): string[] {
 	return SUPPORTED_LOCALES.filter(locale => locale !== 'en');

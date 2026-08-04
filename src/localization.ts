@@ -35,6 +35,10 @@ export const SUPPORTED_LOCALES = [
 
 export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
 
+export const SUPPORTED_COMMIT_LANGUAGES = ['auto', ...SUPPORTED_LOCALES] as const;
+
+export type CommitLanguagePreference = typeof SUPPORTED_COMMIT_LANGUAGES[number];
+
 const COMMIT_LANGUAGES: Record<SupportedLocale, string> = {
 	en: 'English',
 	'zh-cn': 'Simplified Chinese',
@@ -55,7 +59,19 @@ export function localize(
 	return vscode.l10n.t(RUNTIME_MESSAGES[key], ...args);
 }
 
-export function resolveCommitLanguage(locale: string): string {
+export function isCommitLanguagePreference(value: unknown): value is CommitLanguagePreference {
+	return typeof value === 'string'
+		&& (SUPPORTED_COMMIT_LANGUAGES as readonly string[]).includes(value);
+}
+
+export function resolveCommitLanguage(
+	locale: string,
+	preference: CommitLanguagePreference = 'auto',
+): string {
+	if (preference !== 'auto') {
+		return COMMIT_LANGUAGES[preference];
+	}
+
 	const normalized = locale.trim().toLowerCase().replace(/_/g, '-');
 	if (normalized === 'zh-cn' || normalized.startsWith('zh-hans')) {
 		return COMMIT_LANGUAGES['zh-cn'];

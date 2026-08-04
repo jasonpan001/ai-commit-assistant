@@ -19,5 +19,17 @@
   "configuration.provider.mistral": "Mistral OpenAI 互換 API",
   "configuration.provider.together": "Together AI OpenAI 互換 API",
   "configuration.provider.ollama": "ローカル Ollama OpenAI 互換 API",
-  "configuration.provider.lmStudio": "ローカル LM Studio OpenAI 互換 API"
+  "configuration.provider.lmStudio": "ローカル LM Studio OpenAI 互換 API",
+  "configuration.commitLanguage.description": "生成するコミット説明の言語です。自動では VS Code の表示言語に従います。",
+  "configuration.commitLanguage.auto": "自動（VS Code の表示言語に従う）",
+  "configuration.commitLanguage.en": "英語",
+  "configuration.commitLanguage.zhCn": "簡体字中国語",
+  "configuration.commitLanguage.zhTw": "繁体字中国語",
+  "configuration.commitLanguage.ja": "日本語",
+  "configuration.commitLanguage.ko": "韓国語",
+  "configuration.commitLanguage.es": "スペイン語",
+  "configuration.commitLanguage.fr": "フランス語",
+  "configuration.commitLanguage.de": "ドイツ語",
+  "configuration.commitLanguage.ptBr": "ポルトガル語（ブラジル）",
+  "configuration.commitLanguage.ru": "ロシア語"
 }
