@@ -1,0 +1,17 @@
+{
+  "Generated and copied: {0}": "已產生並複製：{0}",
+  "Failed to generate a commit message. Check the configuration and network, then try again.": "產生提交訊息失敗。請檢查設定與網路後再試一次。",
+  "The LLM returned an invalid commit message format. Try again.": "LLM 傳回的提交訊息格式無效，請再試一次。",
+  "Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.": "無法讀取 Git 暫存區。請確認目前目錄是有效的存放庫且 Git 可用。",
+  "The staging area has no changes. Stage changes first.": "暫存區沒有變更，請先暫存變更。",
+  "No workspace found. Open a Git repository first.": "找不到工作區，請先開啟 Git 存放庫。",
+  "Unable to determine the repository. Focus a file in the target workspace and try again.": "無法判斷存放庫，請先聚焦目標工作區中的檔案後再試一次。",
+  "Unsupported aiCommit.provider. Choose one of: {0}.": "不支援此 aiCommit.provider。請選擇以下其中之一：{0}。",
+  "Missing aiCommit.apiKey configuration.": "缺少 aiCommit.apiKey 設定。",
+  "Missing aiCommit.model configuration.": "缺少 aiCommit.model 設定。",
+  "Provider {0} requires aiCommit.baseUrl.": "Provider {0} 需要 aiCommit.baseUrl 設定。",
+  "{0} returned an unrecognized response.": "{0} 傳回無法辨識的回應。",
+  "{0} request failed. Check the network and aiCommit.baseUrl.": "{0} 請求失敗。請檢查網路與 aiCommit.baseUrl。",
+  "{0} request failed (HTTP {1}).": "{0} 請求失敗（HTTP {1}）。",
+  "{0} returned invalid JSON.": "{0} 傳回無效的 JSON。"
+}

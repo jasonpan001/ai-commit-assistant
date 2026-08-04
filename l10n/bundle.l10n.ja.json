@@ -1,0 +1,17 @@
+{
+  "Generated and copied: {0}": "生成してコピーしました：{0}",
+  "Failed to generate a commit message. Check the configuration and network, then try again.": "コミットメッセージを生成できませんでした。設定とネットワークを確認して再試行してください。",
+  "The LLM returned an invalid commit message format. Try again.": "LLM が無効なコミットメッセージ形式を返しました。再試行してください。",
+  "Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.": "Git ステージング領域を読み取れません。現在のディレクトリが有効なリポジトリで、Git が利用可能か確認してください。",
+  "The staging area has no changes. Stage changes first.": "ステージング領域に変更がありません。先に変更をステージしてください。",
+  "No workspace found. Open a Git repository first.": "ワークスペースが見つかりません。先に Git リポジトリを開いてください。",
+  "Unable to determine the repository. Focus a file in the target workspace and try again.": "リポジトリを特定できません。対象ワークスペースのファイルにフォーカスして再試行してください。",
+  "Unsupported aiCommit.provider. Choose one of: {0}.": "aiCommit.provider はサポートされていません。次から選択してください：{0}。",
+  "Missing aiCommit.apiKey configuration.": "aiCommit.apiKey が設定されていません。",
+  "Missing aiCommit.model configuration.": "aiCommit.model が設定されていません。",
+  "Provider {0} requires aiCommit.baseUrl.": "Provider {0} には aiCommit.baseUrl の設定が必要です。",
+  "{0} returned an unrecognized response.": "{0} が認識できない応答を返しました。",
+  "{0} request failed. Check the network and aiCommit.baseUrl.": "{0} のリクエストに失敗しました。ネットワークと aiCommit.baseUrl を確認してください。",
+  "{0} request failed (HTTP {1}).": "{0} のリクエストに失敗しました（HTTP {1}）。",
+  "{0} returned invalid JSON.": "{0} が無効な JSON を返しました。"
+}

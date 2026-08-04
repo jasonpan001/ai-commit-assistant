@@ -14,6 +14,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			loadConfiguration: () => loadConfiguration(vscode.workspace.getConfiguration('aiCommit')),
 			readStagedDiff,
 			createProvider: createLlmProvider,
+			getLocale: () => vscode.env.language,
 			writeClipboard: async message => vscode.env.clipboard.writeText(message),
 			showInformation: async message => {
 				await vscode.window.showInformationMessage(message);

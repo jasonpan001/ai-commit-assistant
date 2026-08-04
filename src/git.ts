@@ -1,5 +1,6 @@
 import { execFile } from 'node:child_process';
 import { UserFacingError } from './errors';
+import { localize } from './localization';
 
 export type GitDiffRunner = (repository: string) => Promise<string>;
 
@@ -14,11 +15,11 @@ export async function readStagedDiff(
 	try {
 		diff = await runner(repository);
 	} catch {
-		throw new UserFacingError('无法读取 Git 暂存区，请确认当前目录是有效仓库且 Git 可用。');
+		throw new UserFacingError(localize('gitReadFailed'));
 	}
 
 	if (!diff.trim()) {
-		throw new UserFacingError('暂存区没有变更，请先执行 Git stage。');
+		throw new UserFacingError(localize('emptyStagedDiff'));
 	}
 
 	return diff;

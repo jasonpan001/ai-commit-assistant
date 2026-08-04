@@ -1,0 +1,17 @@
+{
+  "Generated and copied: {0}": "已生成并复制：{0}",
+  "Failed to generate a commit message. Check the configuration and network, then try again.": "生成提交信息失败。请检查配置和网络后重试。",
+  "The LLM returned an invalid commit message format. Try again.": "LLM 返回的提交信息格式无效，请重试。",
+  "Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.": "无法读取 Git 暂存区。请确认当前目录是有效仓库且 Git 可用。",
+  "The staging area has no changes. Stage changes first.": "暂存区没有变更，请先暂存变更。",
+  "No workspace found. Open a Git repository first.": "未找到工作区，请先打开一个 Git 仓库。",
+  "Unable to determine the repository. Focus a file in the target workspace and try again.": "无法确定仓库，请先聚焦目标工作区中的文件后重试。",
+  "Unsupported aiCommit.provider. Choose one of: {0}.": "不支持该 aiCommit.provider。请选择以下之一：{0}。",
+  "Missing aiCommit.apiKey configuration.": "缺少配置 aiCommit.apiKey。",
+  "Missing aiCommit.model configuration.": "缺少配置 aiCommit.model。",
+  "Provider {0} requires aiCommit.baseUrl.": "Provider {0} 需要配置 aiCommit.baseUrl。",
+  "{0} returned an unrecognized response.": "{0} 返回了无法识别的响应。",
+  "{0} request failed. Check the network and aiCommit.baseUrl.": "{0} 请求失败。请检查网络和 aiCommit.baseUrl。",
+  "{0} request failed (HTTP {1}).": "{0} 请求失败（HTTP {1}）。",
+  "{0} returned invalid JSON.": "{0} 返回了无效的 JSON。"
+}

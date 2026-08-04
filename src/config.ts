@@ -1,4 +1,5 @@
 import { UserFacingError } from './errors';
+import { localize } from './localization';
 import {
 	getProviderDefinition,
 	isProviderName,
@@ -22,22 +23,22 @@ export interface SettingsReader {
 export function loadConfiguration(settings: SettingsReader): AiCommitConfiguration {
 	const providerValue = readString(settings, 'provider') || 'openai-compatible';
 	if (!isProviderName(providerValue)) {
-		throw new UserFacingError(`配置 aiCommit.provider 不受支持，请选择：${SUPPORTED_PROVIDERS.join('、')}。`);
+		throw new UserFacingError(localize('unsupportedProvider', SUPPORTED_PROVIDERS.join(', ')));
 	}
 	const provider = getProviderDefinition(providerValue);
 
 	const apiKey = readString(settings, 'apiKey');
 	if (provider.requiresApiKey && !apiKey) {
-		throw new UserFacingError('缺少配置 aiCommit.apiKey。');
+		throw new UserFacingError(localize('missingApiKey'));
 	}
 
 	const model = readString(settings, 'model');
 	if (!model) {
-		throw new UserFacingError('缺少配置 aiCommit.model。');
+		throw new UserFacingError(localize('missingModel'));
 	}
 	const baseUrl = readString(settings, 'baseUrl') || provider.defaultBaseUrl;
 	if (!baseUrl) {
-		throw new UserFacingError(`Provider ${provider.label} 缺少配置 aiCommit.baseUrl。`);
+		throw new UserFacingError(localize('missingBaseUrl', provider.label));
 	}
 
 	return {

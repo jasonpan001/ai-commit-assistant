@@ -1,0 +1,17 @@
+{
+  "Generated and copied: {0}": "Generado y copiado: {0}",
+  "Failed to generate a commit message. Check the configuration and network, then try again.": "No se pudo generar el mensaje de commit. Comprueba la configuración y la red e inténtalo de nuevo.",
+  "The LLM returned an invalid commit message format. Try again.": "El LLM devolvió un formato de mensaje de commit no válido. Inténtalo de nuevo.",
+  "Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.": "No se pudo leer el área de preparación de Git. Confirma que el directorio actual sea un repositorio válido y que Git esté disponible.",
+  "The staging area has no changes. Stage changes first.": "El área de preparación no contiene cambios. Prepara los cambios primero.",
+  "No workspace found. Open a Git repository first.": "No se encontró ningún espacio de trabajo. Abre primero un repositorio Git.",
+  "Unable to determine the repository. Focus a file in the target workspace and try again.": "No se pudo determinar el repositorio. Selecciona un archivo del espacio de trabajo de destino e inténtalo de nuevo.",
+  "Unsupported aiCommit.provider. Choose one of: {0}.": "aiCommit.provider no es compatible. Elige uno de los siguientes: {0}.",
+  "Missing aiCommit.apiKey configuration.": "Falta la configuración aiCommit.apiKey.",
+  "Missing aiCommit.model configuration.": "Falta la configuración aiCommit.model.",
+  "Provider {0} requires aiCommit.baseUrl.": "El proveedor {0} requiere aiCommit.baseUrl.",
+  "{0} returned an unrecognized response.": "{0} devolvió una respuesta no reconocida.",
+  "{0} request failed. Check the network and aiCommit.baseUrl.": "La solicitud a {0} falló. Comprueba la red y aiCommit.baseUrl.",
+  "{0} request failed (HTTP {1}).": "La solicitud a {0} falló (HTTP {1}).",
+  "{0} returned invalid JSON.": "{0} devolvió JSON no válido."
+}

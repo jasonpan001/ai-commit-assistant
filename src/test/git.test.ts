@@ -14,7 +14,7 @@ suite('Staged Git diff', () => {
 	});
 
 	test('rejects an empty staged diff', async () => {
-		await assert.rejects(readStagedDiff('/repo', async () => '  \n'), /暂存区没有变更/);
+		await assert.rejects(readStagedDiff('/repo', async () => '  \n'), /staging area has no changes/i);
 	});
 
 	test('sanitizes Git failures', async () => {
@@ -23,7 +23,7 @@ suite('Staged Git diff', () => {
 				throw new Error('sensitive local path');
 			}),
 			(error: unknown) => error instanceof Error
-				&& error.message.includes('无法读取 Git 暂存区')
+				&& error.message.includes('Unable to read the Git staging area')
 				&& !error.message.includes('sensitive local path'),
 		);
 	});

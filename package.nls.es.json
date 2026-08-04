@@ -1,0 +1,23 @@
+{
+  "extension.displayName": "Asistente de commits con IA",
+  "extension.description": "Genera mensajes de Conventional Commits con los principales proveedores de LLM en la nube y locales.",
+  "command.generateMessage.title": "Commit con IA: generar mensaje",
+  "configuration.title": "Commit con IA",
+  "configuration.provider.description": "Proveedor de LLM utilizado para generar mensajes de commit.",
+  "configuration.baseUrl.description": "URL base del proveedor. Déjala vacía para usar el valor predeterminado del proveedor seleccionado.",
+  "configuration.apiKey.description": "Clave API del proveedor seleccionado. Es un dato confidencial; guárdala solo en la configuración local de equipos de confianza y nunca la incluyas en el control de versiones.",
+  "configuration.model.description": "Identificador del modelo enviado al proveedor seleccionado.",
+  "configuration.provider.anthropic": "API Messages de Anthropic",
+  "configuration.provider.openai": "API Chat Completions de OpenAI",
+  "configuration.provider.openaiCompatible": "API Chat Completions personalizada compatible con OpenAI",
+  "configuration.provider.gemini": "API Generate Content de Google Gemini",
+  "configuration.provider.azureOpenai": "API Chat Completions de Azure OpenAI",
+  "configuration.provider.deepseek": "API de DeepSeek compatible con OpenAI",
+  "configuration.provider.openrouter": "API unificada de OpenRouter compatible con OpenAI",
+  "configuration.provider.groq": "API de Groq compatible con OpenAI",
+  "configuration.provider.xai": "API de xAI compatible con OpenAI",
+  "configuration.provider.mistral": "API de Mistral compatible con OpenAI",
+  "configuration.provider.together": "API de Together AI compatible con OpenAI",
+  "configuration.provider.ollama": "API local de Ollama compatible con OpenAI",
+  "configuration.provider.lmStudio": "API local de LM Studio compatible con OpenAI"
+}

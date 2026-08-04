@@ -164,7 +164,7 @@ suite('LLM providers', () => {
 			const provider = createLlmProvider(configuration(providerName), async () => {
 				throw new Error('request body, raw response and sensitive-key');
 			});
-			await assertSanitizedRejection(provider.generate(prompt), /请求失败/);
+			await assertSanitizedRejection(provider.generate(prompt), /request failed/);
 		});
 
 		test(`${providerName} rejects malformed JSON without exposing the response`, async () => {
@@ -173,12 +173,12 @@ suite('LLM providers', () => {
 				status: 200,
 				json: async () => { throw new Error('raw response'); },
 			}));
-			await assertSanitizedRejection(provider.generate(prompt), /无效的 JSON/);
+			await assertSanitizedRejection(provider.generate(prompt), /invalid JSON/);
 		});
 
 		test(`${providerName} rejects a missing text response`, async () => {
 			const provider = createLlmProvider(configuration(providerName), async () => response({}));
-			await assertSanitizedRejection(provider.generate(prompt), /无法识别的响应/);
+			await assertSanitizedRejection(provider.generate(prompt), /unrecognized response/);
 		});
 	}
 });

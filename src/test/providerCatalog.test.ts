@@ -16,10 +16,8 @@ suite('Provider catalog', () => {
 		const providerConfiguration = packageJson.contributes.configuration.properties['aiCommit.provider'];
 
 		assert.deepStrictEqual(providerConfiguration.enum, [...SUPPORTED_PROVIDERS]);
-		assert.deepStrictEqual(
-			providerConfiguration.enumDescriptions,
-			PROVIDER_DEFINITIONS.map(provider => provider.description),
-		);
+		assert.strictEqual(providerConfiguration.enumDescriptions.length, PROVIDER_DEFINITIONS.length);
+		assert.ok(providerConfiguration.enumDescriptions.every(description => /^%[^%]+%$/.test(description)));
 		assert.strictEqual(providerConfiguration.default, 'openai-compatible');
 	});
 });

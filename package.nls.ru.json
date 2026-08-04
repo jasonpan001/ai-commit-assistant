@@ -1,0 +1,23 @@
+{
+  "extension.displayName": "ИИ-помощник для коммитов",
+  "extension.description": "Создание сообщений Conventional Commits с помощью популярных облачных и локальных поставщиков LLM.",
+  "command.generateMessage.title": "ИИ-коммит: создать сообщение",
+  "configuration.title": "ИИ-коммит",
+  "configuration.provider.description": "Поставщик LLM для создания сообщений коммитов.",
+  "configuration.baseUrl.description": "Базовый URL поставщика. Оставьте поле пустым, чтобы использовать значение по умолчанию выбранного поставщика.",
+  "configuration.apiKey.description": "Ключ API выбранного поставщика. Это конфиденциальные данные: храните их только в локальных настройках доверенного компьютера и никогда не добавляйте в систему контроля версий.",
+  "configuration.model.description": "Идентификатор модели, отправляемый выбранному поставщику.",
+  "configuration.provider.anthropic": "Anthropic Messages API",
+  "configuration.provider.openai": "OpenAI Chat Completions API",
+  "configuration.provider.openaiCompatible": "Пользовательский OpenAI-совместимый Chat Completions API",
+  "configuration.provider.gemini": "Google Gemini Generate Content API",
+  "configuration.provider.azureOpenai": "Azure OpenAI Chat Completions API",
+  "configuration.provider.deepseek": "OpenAI-совместимый API DeepSeek",
+  "configuration.provider.openrouter": "Унифицированный OpenAI-совместимый API OpenRouter",
+  "configuration.provider.groq": "OpenAI-совместимый API Groq",
+  "configuration.provider.xai": "OpenAI-совместимый API xAI",
+  "configuration.provider.mistral": "OpenAI-совместимый API Mistral",
+  "configuration.provider.together": "OpenAI-совместимый API Together AI",
+  "configuration.provider.ollama": "Локальный OpenAI-совместимый API Ollama",
+  "configuration.provider.lmStudio": "Локальный OpenAI-совместимый API LM Studio"
+}

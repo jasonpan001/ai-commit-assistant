@@ -1,3 +1,5 @@
+import { localize } from './localization';
+
 export class UserFacingError extends Error {
 	constructor(message: string) {
 		super(message);
@@ -10,5 +12,5 @@ export function getUserFacingMessage(error: unknown): string {
 		return error.message;
 	}
 
-	return '生成提交信息失败，请检查配置和网络后重试。';
+	return localize('generationFailed');
 }

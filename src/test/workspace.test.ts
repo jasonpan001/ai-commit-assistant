@@ -11,10 +11,10 @@ suite('Workspace selection', () => {
 	});
 
 	test('rejects an empty workspace window', () => {
-		assert.throws(() => selectRepository(undefined, []), /未找到工作区/);
+		assert.throws(() => selectRepository(undefined, []), /No workspace found/);
 	});
 
 	test('rejects ambiguous multi-root windows', () => {
-		assert.throws(() => selectRepository(undefined, ['/repo/a', '/repo/b']), /无法确定仓库/);
+		assert.throws(() => selectRepository(undefined, ['/repo/a', '/repo/b']), /Unable to determine the repository/);
 	});
 });
