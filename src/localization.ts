@@ -1,7 +1,11 @@
 import * as vscode from 'vscode';
 
 export const RUNTIME_MESSAGES = {
-	generatedAndCopied: 'Generated and copied: {0}',
+	generatedAndInserted: 'Generated, added to the Git commit input, and copied: {0}',
+	commitInputNotEmpty: 'The Git commit input already contains text. Replace it with a generated message?',
+	replaceCommitInput: 'Replace',
+	gitIntegrationUnavailable: 'VS Code Git integration is unavailable. Enable the built-in Git extension and try again.',
+	gitRepositoryNotFound: 'Unable to find the selected Git repository.',
 	generationFailed: 'Failed to generate a commit message. Check the configuration and network, then try again.',
 	invalidCommitMessage: 'The LLM returned an invalid commit message format. Try again.',
 	gitReadFailed: 'Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.',

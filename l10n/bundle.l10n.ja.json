@@ -1,5 +1,9 @@
 {
-  "Generated and copied: {0}": "生成してコピーしました：{0}",
+  "Generated, added to the Git commit input, and copied: {0}": "生成して Git コミット入力欄に追加し、コピーしました：{0}",
+  "The Git commit input already contains text. Replace it with a generated message?": "Git コミット入力欄には既にテキストがあります。生成したメッセージで置き換えますか？",
+  "Replace": "置き換え",
+  "VS Code Git integration is unavailable. Enable the built-in Git extension and try again.": "VS Code の Git 統合を利用できません。組み込み Git 拡張機能を有効にして再試行してください。",
+  "Unable to find the selected Git repository.": "選択された Git リポジトリが見つかりません。",
   "Failed to generate a commit message. Check the configuration and network, then try again.": "コミットメッセージを生成できませんでした。設定とネットワークを確認して再試行してください。",
   "The LLM returned an invalid commit message format. Try again.": "LLM が無効なコミットメッセージ形式を返しました。再試行してください。",
   "Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.": "Git ステージング領域を読み取れません。現在のディレクトリが有効なリポジトリで、Git が利用可能か確認してください。",

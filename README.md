@@ -1,6 +1,6 @@
 # AI Commit Assistant
 
-根据当前 Git 仓库的 staged diff 调用 LLM，生成一条与 VS Code 显示语言一致的 Conventional Commit message，并复制到系统剪贴板。
+根据当前 Git 仓库的 staged diff 调用 LLM，生成 Conventional Commit message，写入 Git 提交输入框并复制到系统剪贴板。
 
 默认格式：
 
@@ -19,10 +19,10 @@ fix(rtc): 修复房间退出状态同步问题
 1. 在 VS Code 中打开 Git 仓库。
 2. 使用 `git add` 或 Source Control 面板暂存需要提交的变更。
 3. 配置 LLM Provider、API Key 和模型。
-4. 打开命令面板，执行 `AI Commit: Generate Message`。
-5. 检查剪贴板中的结果，再通过自己的 Git 工作流提交。
+4. 点击 Source Control 面板顶部的 AI Commit 按钮，或通过命令面板执行 `AI Commit: Generate Message`。
+5. 检查 Git 提交输入框中的结果，再通过自己的 Git 工作流提交。
 
-扩展不会执行 `git commit`、不会修改暂存区，也不会自动填写 Source Control 输入框。
+扩展会同时保留一份剪贴板副本，但不会执行 `git commit` 或修改暂存区。提交输入框已有内容时，会先询问是否覆盖；取消后不会请求 LLM。
 
 ## 多语言
 
