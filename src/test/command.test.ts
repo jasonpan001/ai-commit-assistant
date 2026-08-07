@@ -12,16 +12,57 @@ const configuration: AiCommitConfiguration = {
 };
 
 suite('Generate command workflow', () => {
-	test('copies and reports a valid generated message', async () => {
+	test('writes, copies and reports a valid generated message', async () => {
 		const state = createState();
 		await executeGenerateMessageCommand(dependencies(state));
 
 		assert.deepStrictEqual(state.clipboardWrites, ['fix(core): 修复暂存区生成逻辑']);
-		assert.deepStrictEqual(state.informationMessages, ['Generated and copied: fix(core): 修复暂存区生成逻辑']);
+		assert.deepStrictEqual(state.commitInputWrites, [{ repository: '/repo', message: 'fix(core): 修复暂存区生成逻辑' }]);
+		assert.deepStrictEqual(state.informationMessages, [
+			'Generated, added to the Git commit input, and copied: fix(core): 修复暂存区生成逻辑',
+		]);
 		assert.deepStrictEqual(state.errorMessages, []);
 		assert.strictEqual(state.repositoryRead, '/repo');
 		assert.strictEqual(state.providerCalls, 1);
 		assert.match(state.promptSystem ?? '', /Simplified Chinese/);
+	});
+
+	test('stops before reading Git when replacing an existing message is cancelled', async () => {
+		const state = createState();
+		state.existingCommitInput = 'hand-written message';
+		state.confirmReplacement = false;
+
+		await executeGenerateMessageCommand(dependencies(state));
+
+		assert.strictEqual(state.confirmationCalls, 1);
+		assert.strictEqual(state.repositoryRead, undefined);
+		assert.strictEqual(state.providerCalls, 0);
+		assert.deepStrictEqual(state.commitInputWrites, []);
+		assert.deepStrictEqual(state.clipboardWrites, []);
+	});
+
+	test('replaces an existing message after confirmation', async () => {
+		const state = createState();
+		state.existingCommitInput = 'hand-written message';
+
+		await executeGenerateMessageCommand(dependencies(state));
+
+		assert.strictEqual(state.confirmationCalls, 1);
+		assert.strictEqual(state.providerCalls, 1);
+		assert.strictEqual(state.commitInputWrites.length, 1);
+	});
+
+	test('does not overwrite text entered while the provider request is running', async () => {
+		const state = createState();
+		state.commitInputDuringGeneration = 'typed while waiting';
+		state.confirmReplacement = false;
+
+		await executeGenerateMessageCommand(dependencies(state));
+
+		assert.strictEqual(state.providerCalls, 1);
+		assert.strictEqual(state.confirmationCalls, 1);
+		assert.deepStrictEqual(state.commitInputWrites, []);
+		assert.deepStrictEqual(state.clipboardWrites, []);
 	});
 
 	for (const failure of [
@@ -76,6 +117,11 @@ interface CommandState {
 	repositoryRead: string | undefined;
 	providerCalls: number;
 	promptSystem: string | undefined;
+	existingCommitInput: string;
+	confirmReplacement: boolean;
+	confirmationCalls: number;
+	commitInputWrites: Array<{ repository: string; message: string }>;
+	commitInputDuringGeneration: string | undefined;
 }
 
 function createState(): CommandState {
@@ -86,6 +132,11 @@ function createState(): CommandState {
 		repositoryRead: undefined,
 		providerCalls: 0,
 		promptSystem: undefined,
+		existingCommitInput: '',
+		confirmReplacement: true,
+		confirmationCalls: 0,
+		commitInputWrites: [],
+		commitInputDuringGeneration: undefined,
 	};
 }
 
@@ -94,6 +145,14 @@ function dependencies(state: CommandState): GenerateCommandDependencies {
 		resolveRepository: () => '/repo',
 		loadConfiguration: () => configuration,
 		getLocale: () => 'en',
+		readCommitInput: async () => state.existingCommitInput,
+		confirmCommitInputReplacement: async () => {
+			state.confirmationCalls += 1;
+			return state.confirmReplacement;
+		},
+		writeCommitInput: async (repository, message) => {
+			state.commitInputWrites.push({ repository, message });
+		},
 		readStagedDiff: async repository => {
 			state.repositoryRead = repository;
 			return 'diff';
@@ -102,6 +161,9 @@ function dependencies(state: CommandState): GenerateCommandDependencies {
 			generate: async prompt => {
 				state.providerCalls += 1;
 				state.promptSystem = prompt.system;
+				if (state.commitInputDuringGeneration !== undefined) {
+					state.existingCommitInput = state.commitInputDuringGeneration;
+				}
 				return 'fix(core): 修复暂存区生成逻辑';
 			},
 		}),

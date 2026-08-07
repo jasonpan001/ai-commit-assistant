@@ -1,5 +1,9 @@
 {
-  "Generated and copied: {0}": "Сообщение создано и скопировано: {0}",
+  "Generated, added to the Git commit input, and copied: {0}": "Сообщение создано, добавлено в поле коммита Git и скопировано: {0}",
+  "The Git commit input already contains text. Replace it with a generated message?": "Поле коммита Git уже содержит текст. Заменить его созданным сообщением?",
+  "Replace": "Заменить",
+  "VS Code Git integration is unavailable. Enable the built-in Git extension and try again.": "Интеграция Git в VS Code недоступна. Включите встроенное расширение Git и повторите попытку.",
+  "Unable to find the selected Git repository.": "Не удалось найти выбранный репозиторий Git.",
   "Failed to generate a commit message. Check the configuration and network, then try again.": "Не удалось создать сообщение коммита. Проверьте конфигурацию и сеть, затем повторите попытку.",
   "The LLM returned an invalid commit message format. Try again.": "LLM вернула недопустимый формат сообщения коммита. Повторите попытку.",
   "Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.": "Не удалось прочитать индекс Git. Убедитесь, что текущий каталог является допустимым репозиторием и Git доступен.",

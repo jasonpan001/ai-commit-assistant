@@ -1,5 +1,9 @@
 {
-  "Generated and copied: {0}": "Gerado e copiado: {0}",
+  "Generated, added to the Git commit input, and copied: {0}": "Gerado, adicionado ao campo de commit do Git e copiado: {0}",
+  "The Git commit input already contains text. Replace it with a generated message?": "O campo de commit do Git já contém texto. Deseja substituí-lo por uma mensagem gerada?",
+  "Replace": "Substituir",
+  "VS Code Git integration is unavailable. Enable the built-in Git extension and try again.": "A integração do Git no VS Code não está disponível. Ative a extensão Git integrada e tente novamente.",
+  "Unable to find the selected Git repository.": "Não foi possível encontrar o repositório Git selecionado.",
   "Failed to generate a commit message. Check the configuration and network, then try again.": "Não foi possível gerar a mensagem de commit. Verifique a configuração e a rede e tente novamente.",
   "The LLM returned an invalid commit message format. Try again.": "O LLM retornou um formato de mensagem de commit inválido. Tente novamente.",
   "Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.": "Não foi possível ler a área de staging do Git. Confirme se o diretório atual é um repositório válido e se o Git está disponível.",

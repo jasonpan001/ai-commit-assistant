@@ -89,10 +89,28 @@ suite('Localization', () => {
 		assert.strictEqual(setting.default, 'auto');
 		assert.strictEqual(setting.scope, 'window');
 	});
+
+	test('contributes the generate command to the Git SCM title toolbar', () => {
+		const packageJson = JSON.parse(
+			readFileSync(resolve(projectRoot, 'package.json'), 'utf8'),
+		) as PackageManifest;
+		const menuItem = packageJson.contributes.menus['scm/title'][0];
+
+		assert.strictEqual(menuItem.command, 'aiCommit.generateMessage');
+		assert.strictEqual(menuItem.when, 'scmProvider == git');
+		assert.match(menuItem.group, /^navigation/);
+	});
 });
 
 interface PackageManifest {
 	contributes: {
+		menus: {
+			'scm/title': Array<{
+				command: string;
+				when: string;
+				group: string;
+			}>;
+		};
 		configuration: {
 			properties: {
 				'aiCommit.commitLanguage': {

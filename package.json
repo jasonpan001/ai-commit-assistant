@@ -18,9 +18,19 @@
     "commands": [
       {
         "command": "aiCommit.generateMessage",
-        "title": "%command.generateMessage.title%"
+        "title": "%command.generateMessage.title%",
+        "icon": "$(sparkle)"
       }
     ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "aiCommit.generateMessage",
+          "when": "scmProvider == git",
+          "group": "navigation@1"
+        }
+      ]
+    },
     "configuration": {
       "title": "%configuration.title%",
       "properties": {
