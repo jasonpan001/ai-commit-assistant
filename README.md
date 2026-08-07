@@ -1,78 +1,80 @@
 # AI Commit Assistant
 
-根据当前 Git 仓库的 staged diff 调用 LLM，生成 Conventional Commit message，写入 Git 提交输入框并复制到系统剪贴板。
+[English](README.md) | [中文](README.zh-cn.md)
 
-默认格式：
+Generate Conventional Commit messages from your staged Git diff using mainstream cloud and local LLM providers. The result is written into the Git commit input box and copied to the clipboard.
+
+Default format:
 
 ```text
 type(scope): description
 ```
 
-例如：
+Example:
 
 ```text
-fix(rtc): 修复房间退出状态同步问题
+fix(rtc): sync room leave state on exit
 ```
 
-## 使用方式
+## How to use
 
-1. 在 VS Code 中打开 Git 仓库。
-2. 使用 `git add` 或 Source Control 面板暂存需要提交的变更。
-3. 配置 LLM Provider、API Key 和模型。
-4. 点击 Source Control 面板顶部的 AI Commit 按钮，或通过命令面板执行 `AI Commit: Generate Message`。
-5. 检查 Git 提交输入框中的结果，再通过自己的 Git 工作流提交。
+1. Open a Git repository in VS Code.
+2. Stage the changes you want to commit (`git add` or the Source Control panel).
+3. Configure the LLM provider, API key, and model.
+4. Click the AI Commit button at the top of the Source Control panel, or run `AI Commit: Generate Message` from the Command Palette.
+5. Review the message in the Git commit input box, then commit with your usual workflow.
 
-扩展会同时保留一份剪贴板副本，但不会执行 `git commit` 或修改暂存区。提交输入框已有内容时，会先询问是否覆盖；取消后不会请求 LLM。
+The extension also copies the message to the clipboard. It never runs `git commit` or changes the staging area. If the commit input already has text, you will be asked whether to overwrite it; canceling skips the LLM request.
 
-## 多语言
+## Localization
 
-扩展界面和运行时提示会跟随 VS Code 的显示语言，生成结果中的 description 也会使用相同语言。当前支持：
+The extension UI and runtime messages follow the VS Code display language. Generated commit descriptions use the same language by default. Supported languages:
 
 - English
-- 简体中文、繁體中文
-- 日本語、한국어
-- Español、Français、Deutsch
-- Português (Brasil)、Русский
+- Simplified Chinese, Traditional Chinese
+- Japanese, Korean
+- Spanish, French, German
+- Portuguese (Brazil), Russian
 
-通过命令面板执行 `Configure Display Language`，安装或选择对应的 VS Code 语言包，然后按 VS Code 提示重新加载窗口即可切换。未支持的显示语言会回退到英文。
+Use `Configure Display Language` from the Command Palette, install or select a language pack, then reload when prompted. Unsupported display languages fall back to English.
 
-如果希望界面语言和 Commit description 使用不同语言，可通过 `aiCommit.commitLanguage` 显式选择。默认值 `auto` 表示跟随 VS Code 显示语言；显式选择只影响 Commit description，不会改变设置页、命令或通知语言。例如，英文界面选择 `zh-cn` 后会生成中文 description。
+To keep the UI language and commit description language separate, set `aiCommit.commitLanguage`. The default `auto` follows the VS Code display language. An explicit value only affects the commit description, not settings, commands, or notifications. For example, with an English UI and `zh-cn`, descriptions are generated in Simplified Chinese.
 
-生成结果始终保持 `type(scope): description` 结构；`type` 和 `scope` 使用英文标识，只有 description 跟随所选 Commit 语言。
+Output always keeps the `type(scope): description` shape; `type` and `scope` stay English identifiers, and only the description follows the selected commit language.
 
-## 配置
+## Configuration
 
-| 设置 | 必填 | 说明 |
+| Setting | Required | Description |
 | --- | --- | --- |
-| `aiCommit.provider` | 是 | LLM Provider，默认 `openai-compatible` |
-| `aiCommit.commitLanguage` | 否 | Commit description 语言，默认 `auto`；支持在 User 或 Workspace 设置中覆盖 |
-| `aiCommit.baseUrl` | 视 Provider 而定 | 留空使用预设地址；Azure OpenAI 必填 |
-| `aiCommit.apiKey` | 视 Provider 而定 | 云端 Provider 必填；Ollama、LM Studio 可留空；按 machine scope 保存 |
-| `aiCommit.model` | 是 | Provider 接受的模型或 Azure 部署标识 |
+| `aiCommit.provider` | Yes | LLM provider. Default: `openai-compatible` |
+| `aiCommit.commitLanguage` | No | Commit description language. Default: `auto`. Can be set at User or Workspace scope |
+| `aiCommit.baseUrl` | Depends on provider | Leave empty to use the preset URL; required for Azure OpenAI |
+| `aiCommit.apiKey` | Depends on provider | Required for cloud providers; optional for Ollama and LM Studio. Stored at machine scope |
+| `aiCommit.model` | Yes | Model id accepted by the provider, or Azure deployment name |
 
-### Provider 预设
+### Provider presets
 
-| Provider | 配置值 | 默认 Base URL | API Key | 协议 |
+| Provider | Value | Default Base URL | API Key | Protocol |
 | --- | --- | --- | --- | --- |
-| Anthropic | `anthropic` | `https://api.anthropic.com` | 必填 | Messages |
-| OpenAI | `openai` | `https://api.openai.com/v1` | 必填 | Chat Completions |
-| OpenAI Compatible | `openai-compatible` | `https://api.openai.com/v1` | 必填 | Chat Completions |
-| Google Gemini | `gemini` | `https://generativelanguage.googleapis.com/v1beta` | 必填 | Generate Content |
-| Azure OpenAI | `azure-openai` | 无，必须配置资源地址 | 必填 | Chat Completions |
-| DeepSeek | `deepseek` | `https://api.deepseek.com` | 必填 | Chat Completions |
-| OpenRouter | `openrouter` | `https://openrouter.ai/api/v1` | 必填 | Chat Completions |
-| Groq | `groq` | `https://api.groq.com/openai/v1` | 必填 | Chat Completions |
-| xAI | `xai` | `https://api.x.ai/v1` | 必填 | Chat Completions |
-| Mistral AI | `mistral` | `https://api.mistral.ai/v1` | 必填 | Chat Completions |
-| Together AI | `together` | `https://api.together.xyz/v1` | 必填 | Chat Completions |
-| Ollama | `ollama` | `http://localhost:11434/v1` | 可选 | Chat Completions |
-| LM Studio | `lm-studio` | `http://localhost:1234/v1` | 可选 | Chat Completions |
+| Anthropic | `anthropic` | `https://api.anthropic.com` | Required | Messages |
+| OpenAI | `openai` | `https://api.openai.com/v1` | Required | Chat Completions |
+| OpenAI Compatible | `openai-compatible` | `https://api.openai.com/v1` | Required | Chat Completions |
+| Google Gemini | `gemini` | `https://generativelanguage.googleapis.com/v1beta` | Required | Generate Content |
+| Azure OpenAI | `azure-openai` | None; you must set the resource URL | Required | Chat Completions |
+| DeepSeek | `deepseek` | `https://api.deepseek.com` | Required | Chat Completions |
+| OpenRouter | `openrouter` | `https://openrouter.ai/api/v1` | Required | Chat Completions |
+| Groq | `groq` | `https://api.groq.com/openai/v1` | Required | Chat Completions |
+| xAI | `xai` | `https://api.x.ai/v1` | Required | Chat Completions |
+| Mistral AI | `mistral` | `https://api.mistral.ai/v1` | Required | Chat Completions |
+| Together AI | `together` | `https://api.together.xyz/v1` | Required | Chat Completions |
+| Ollama | `ollama` | `http://localhost:11434/v1` | Optional | Chat Completions |
+| LM Studio | `lm-studio` | `http://localhost:1234/v1` | Optional | Chat Completions |
 
-模型名称由各 Provider 管理且可能变化，扩展不会内置默认模型。请填写当前账户可用的模型标识。
+Model names are managed by each provider and may change. This extension does not ship a default model. Use a model id available on your account.
 
-### 配置示例
+### Configuration examples
 
-OpenAI Compatible 可用于任何实现 `POST {baseUrl}/chat/completions` 的服务：
+OpenAI Compatible works with any service that implements `POST {baseUrl}/chat/completions`:
 
 ```json
 {
@@ -83,7 +85,7 @@ OpenAI Compatible 可用于任何实现 `POST {baseUrl}/chat/completions` 的服
 }
 ```
 
-Anthropic：
+Anthropic:
 
 ```json
 {
@@ -93,7 +95,7 @@ Anthropic：
 }
 ```
 
-Google Gemini：
+Google Gemini:
 
 ```json
 {
@@ -103,7 +105,7 @@ Google Gemini：
 }
 ```
 
-Azure OpenAI 的 Base URL 必须指向资源的 OpenAI v1 地址，`model` 填部署标识：
+For Azure OpenAI, Base URL must point at the resource OpenAI v1 endpoint, and `model` is the deployment name:
 
 ```json
 {
@@ -114,7 +116,7 @@ Azure OpenAI 的 Base URL 必须指向资源的 OpenAI v1 地址，`model` 填�
 }
 ```
 
-Ollama 默认连接本机服务，不要求 API Key：
+Ollama connects to a local service by default and does not require an API key:
 
 ```json
 {
@@ -123,13 +125,13 @@ Ollama 默认连接本机服务，不要求 API Key：
 }
 ```
 
-LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服务启用了 Bearer Token，可同时配置 `aiCommit.apiKey`。
+LM Studio works the same way with provider `lm-studio`. If the local server requires a Bearer token, also set `aiCommit.apiKey`.
 
-用户配置的 `aiCommit.baseUrl` 始终优先于预设地址，可用于企业代理、私有部署或兼容网关。
+A user-configured `aiCommit.baseUrl` always overrides the preset URL, which is useful for enterprise proxies, private deployments, or compatible gateways.
 
-### Commit 语言示例
+### Commit language example
 
-以下配置会保持 VS Code 界面语言不变，同时要求 LLM 生成简体中文 description：
+Keep the VS Code UI language unchanged while asking the LLM for Simplified Chinese descriptions:
 
 ```json
 {
@@ -137,23 +139,23 @@ LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服
 }
 ```
 
-可选值为 `auto`、`en`、`zh-cn`、`zh-tw`、`ja`、`ko`、`es`、`fr`、`de`、`pt-br` 和 `ru`。Workspace 设置遵循 VS Code 原生配置优先级，可覆盖 User 设置。
+Allowed values: `auto`, `en`, `zh-cn`, `zh-tw`, `ja`, `ko`, `es`, `fr`, `de`, `pt-br`, and `ru`. Workspace settings follow normal VS Code precedence and can override User settings.
 
-## 数据与凭证安全
+## Data and credential safety
 
-执行命令会把完整 staged diff、系统 Prompt 和模型标识发送到所选 Provider 的最终请求地址。请只在组织策略允许时使用，并确认 Base URL 及其运营方可信。
+Running the command sends the full staged diff, system prompt, and model id to the final request URL of the selected provider. Use this only when allowed by your organization policy, and make sure the Base URL and its operator are trusted.
 
-- `aiCommit.apiKey` 是敏感配置。不要将真实密钥写入会提交的 `.vscode/settings.json`。
-- API Key 当前存储在 VS Code machine scope 设置中，并非 VS Code SecretStorage。
-- 扩展不会记录 API Key、staged diff、请求正文或 Provider 原始响应。
-- Ollama 和 LM Studio 的默认 HTTP 地址仅指向 `localhost`。不要把敏感 diff 发送到不可信的远程明文 HTTP 地址。
-- 自定义 Base URL 会接收完整 staged diff，扩展无法验证代理是否保存或转发数据。
+- `aiCommit.apiKey` is sensitive. Do not put real keys in a committed `.vscode/settings.json`.
+- API keys are stored in VS Code machine-scope settings, not SecretStorage.
+- The extension does not log API keys, staged diffs, request bodies, or raw provider responses.
+- Default HTTP endpoints for Ollama and LM Studio point at `localhost` only. Do not send sensitive diffs to untrusted remote cleartext HTTP URLs.
+- A custom Base URL receives the full staged diff; the extension cannot verify whether a proxy stores or forwards that data.
 
-## MVP 限制
+## MVP limitations
 
-- 每次只处理一个仓库；多根工作区会优先使用当前编辑器所属工作区。
-- 仅支持非流式文本生成，不支持重试、故障转移、自定义 Prompt 或自定义提交格式。
-- 不对大 diff 做截断或摘要，超过 Git 缓冲区或模型上下文限制时会失败并提示。
-- Git diff 和 Provider 请求的超时时间固定为 30 秒。
-- 仅校验单行 Conventional Commit 输出结构，语义和描述语言正确性仍需人工审核。
-- 暂不支持 Amazon Bedrock SigV4、Google Vertex AI OAuth 或云厂商工作负载身份认证。
+- One repository at a time; in multi-root workspaces the active editor's folder is preferred.
+- Non-streaming text generation only; no retries, failover, custom prompts, or custom commit formats.
+- Large diffs are not truncated or summarized; requests may fail when Git buffers or model context limits are exceeded.
+- Git diff and provider requests time out after 30 seconds.
+- Only the single-line Conventional Commit structure is validated; semantics and description language still need human review.
+- Amazon Bedrock SigV4, Google Vertex AI OAuth, and cloud workload identity are not supported yet.

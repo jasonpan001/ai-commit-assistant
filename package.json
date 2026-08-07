@@ -3,11 +3,38 @@
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
   "version": "0.0.1",
+  "publisher": "jasonpan001",
+  "license": "GPL-3.0-only",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jasonpan001/ai-commit-assistant.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jasonpan001/ai-commit-assistant/issues"
+  },
+  "homepage": "https://github.com/jasonpan001/ai-commit-assistant#readme",
   "engines": {
     "vscode": "^1.125.0"
   },
   "categories": [
+    "SCM Providers",
     "Other"
+  ],
+  "keywords": [
+    "git",
+    "commit",
+    "ai",
+    "llm",
+    "conventional-commits",
+    "scm",
+    "openai",
+    "anthropic",
+    "ollama"
   ],
   "activationEvents": [
     "onCommand:aiCommit.generateMessage"
