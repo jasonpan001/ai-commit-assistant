@@ -16,6 +16,8 @@ suite('Provider catalog', () => {
 		const providerConfiguration = packageJson.contributes.configuration.properties['aiCommit.provider'];
 
 		assert.deepStrictEqual(providerConfiguration.enum, [...SUPPORTED_PROVIDERS]);
+		assert.strictEqual(providerConfiguration.enumItemLabels.length, PROVIDER_DEFINITIONS.length);
+		assert.ok(providerConfiguration.enumItemLabels.every(label => label.trim().length > 0));
 		assert.strictEqual(providerConfiguration.enumDescriptions.length, PROVIDER_DEFINITIONS.length);
 		assert.ok(providerConfiguration.enumDescriptions.every(description => /^%[^%]+%$/.test(description)));
 		assert.strictEqual(providerConfiguration.default, 'openai-compatible');
@@ -28,6 +30,7 @@ interface PackageManifest {
 			properties: {
 				'aiCommit.provider': {
 					enum: string[];
+					enumItemLabels: string[];
 					enumDescriptions: string[];
 					default: string;
 				};

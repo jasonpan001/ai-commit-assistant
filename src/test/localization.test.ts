@@ -84,10 +84,27 @@ suite('Localization', () => {
 		const setting = packageJson.contributes.configuration.properties['aiCommit.commitLanguage'];
 
 		assert.deepStrictEqual(setting.enum, [...SUPPORTED_COMMIT_LANGUAGES]);
-		assert.strictEqual(setting.enumDescriptions.length, SUPPORTED_COMMIT_LANGUAGES.length);
-		assert.ok(setting.enumDescriptions.every(description => /^%[^%]+%$/.test(description)));
+		assert.strictEqual(setting.enumItemLabels.length, SUPPORTED_COMMIT_LANGUAGES.length);
+		assert.ok(setting.enumItemLabels.every(label => /^%[^%]+%$/.test(label)));
 		assert.strictEqual(setting.default, 'auto');
 		assert.strictEqual(setting.scope, 'window');
+	});
+
+	test('orders and labels settings for the setup workflow', () => {
+		const packageJson = JSON.parse(
+			readFileSync(resolve(projectRoot, 'package.json'), 'utf8'),
+		) as PackageManifest;
+		const properties = packageJson.contributes.configuration.properties;
+		const settingIds = [
+			'aiCommit.provider',
+			'aiCommit.baseUrl',
+			'aiCommit.apiKey',
+			'aiCommit.model',
+			'aiCommit.commitLanguage',
+		] as const;
+
+		assert.deepStrictEqual(settingIds.map(id => properties[id].order), [10, 20, 30, 40, 50]);
+		assert.ok(settingIds.every(id => /^%[^%]+%$/.test(properties[id].title)));
 	});
 
 	test('contributes the generate command to the Git SCM title toolbar', () => {
@@ -112,10 +129,15 @@ interface PackageManifest {
 			}>;
 		};
 		configuration: {
-			properties: {
+			properties: Record<string, {
+				title: string;
+				order: number;
+			}> & {
 				'aiCommit.commitLanguage': {
+					title: string;
+					order: number;
 					enum: string[];
-					enumDescriptions: string[];
+					enumItemLabels: string[];
 					default: string;
 					scope: string;
 				};

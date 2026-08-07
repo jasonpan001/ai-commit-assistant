@@ -62,7 +62,9 @@
       "title": "%configuration.title%",
       "properties": {
         "aiCommit.provider": {
+          "title": "%configuration.provider.title%",
           "type": "string",
+          "order": 10,
           "enum": [
             "anthropic",
             "openai",
@@ -77,6 +79,21 @@
             "together",
             "ollama",
             "lm-studio"
+          ],
+          "enumItemLabels": [
+            "Anthropic",
+            "OpenAI",
+            "OpenAI Compatible",
+            "Google Gemini",
+            "Azure OpenAI",
+            "DeepSeek",
+            "OpenRouter",
+            "Groq",
+            "xAI",
+            "Mistral AI",
+            "Together AI",
+            "Ollama",
+            "LM Studio"
           ],
           "enumDescriptions": [
             "%configuration.provider.anthropic%",
@@ -96,8 +113,32 @@
           "default": "openai-compatible",
           "description": "%configuration.provider.description%"
         },
-        "aiCommit.commitLanguage": {
+        "aiCommit.baseUrl": {
+          "title": "%configuration.baseUrl.title%",
           "type": "string",
+          "order": 20,
+          "default": "",
+          "description": "%configuration.baseUrl.description%"
+        },
+        "aiCommit.apiKey": {
+          "title": "%configuration.apiKey.title%",
+          "type": "string",
+          "order": 30,
+          "default": "",
+          "scope": "machine",
+          "markdownDescription": "%configuration.apiKey.description%"
+        },
+        "aiCommit.model": {
+          "title": "%configuration.model.title%",
+          "type": "string",
+          "order": 40,
+          "default": "",
+          "description": "%configuration.model.description%"
+        },
+        "aiCommit.commitLanguage": {
+          "title": "%configuration.commitLanguage.title%",
+          "type": "string",
+          "order": 50,
           "enum": [
             "auto",
             "en",
@@ -111,7 +152,7 @@
             "pt-br",
             "ru"
           ],
-          "enumDescriptions": [
+          "enumItemLabels": [
             "%configuration.commitLanguage.auto%",
             "%configuration.commitLanguage.en%",
             "%configuration.commitLanguage.zhCn%",
@@ -127,22 +168,6 @@
           "default": "auto",
           "scope": "window",
           "description": "%configuration.commitLanguage.description%"
-        },
-        "aiCommit.baseUrl": {
-          "type": "string",
-          "default": "",
-          "description": "%configuration.baseUrl.description%"
-        },
-        "aiCommit.apiKey": {
-          "type": "string",
-          "default": "",
-          "scope": "machine",
-          "markdownDescription": "%configuration.apiKey.description%"
-        },
-        "aiCommit.model": {
-          "type": "string",
-          "default": "",
-          "description": "%configuration.model.description%"
         }
       }
     }

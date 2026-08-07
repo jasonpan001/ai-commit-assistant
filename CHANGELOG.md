@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 ### Added
 
 - Generate Conventional Commit messages from staged Git diffs via cloud and local LLM providers
-- Source Control title-bar action and `AI Commit: Generate Message` command
+- Source Control title-bar action and `AI Commit: Generate Commit Message` command
 - Provider presets: Anthropic, OpenAI, OpenAI-compatible, Gemini, Azure OpenAI, DeepSeek, OpenRouter, Groq, xAI, Mistral, Together, Ollama, LM Studio
 - UI and runtime localization for English, zh-CN, zh-TW, ja, ko, es, fr, de, pt-BR, and ru
 - `aiCommit.commitLanguage` setting to decouple commit description language from the VS Code display language

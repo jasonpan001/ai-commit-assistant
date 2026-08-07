@@ -2,7 +2,7 @@
 
 [English](README.md) | [中文](README.zh-cn.md)
 
-Generate Conventional Commit messages from your staged Git diff using mainstream cloud and local LLM providers. The result is written into the Git commit input box and copied to the clipboard.
+Generate Conventional Commit messages from your staged Git diff using cloud or local LLM providers. The result is written into the Git commit input box and copied to the clipboard.
 
 Default format:
 
@@ -21,7 +21,7 @@ fix(rtc): sync room leave state on exit
 1. Open a Git repository in VS Code.
 2. Stage the changes you want to commit (`git add` or the Source Control panel).
 3. Configure the LLM provider, API key, and model.
-4. Click the AI Commit button at the top of the Source Control panel, or run `AI Commit: Generate Message` from the Command Palette.
+4. Click the AI Commit button at the top of the Source Control panel, or run `AI Commit: Generate Commit Message` from the Command Palette.
 5. Review the message in the Git commit input box, then commit with your usual workflow.
 
 The extension also copies the message to the clipboard. It never runs `git commit` or changes the staging area. If the commit input already has text, you will be asked whether to overwrite it; canceling skips the LLM request.
@@ -46,11 +46,11 @@ Output always keeps the `type(scope): description` shape; `type` and `scope` sta
 
 | Setting | Required | Description |
 | --- | --- | --- |
-| `aiCommit.provider` | Yes | LLM provider. Default: `openai-compatible` |
-| `aiCommit.commitLanguage` | No | Commit description language. Default: `auto`. Can be set at User or Workspace scope |
-| `aiCommit.baseUrl` | Depends on provider | Leave empty to use the preset URL; required for Azure OpenAI |
-| `aiCommit.apiKey` | Depends on provider | Required for cloud providers; optional for Ollama and LM Studio. Stored at machine scope |
-| `aiCommit.model` | Yes | Model id accepted by the provider, or Azure deployment name |
+| `aiCommit.provider` | Yes | AI provider used to generate commit messages. Default: `openai-compatible` |
+| `aiCommit.baseUrl` | Depends on provider | Optional API base URL. Leave empty to use the preset endpoint; required for Azure OpenAI |
+| `aiCommit.apiKey` | Depends on provider | Required for cloud providers; optional for Ollama and LM Studio. Stored in machine-scoped VS Code settings, not SecretStorage, and not synchronized |
+| `aiCommit.model` | Yes | Model ID used for generation, or the Azure OpenAI deployment name |
+| `aiCommit.commitLanguage` | No | Commit description language. Default: `auto`; `type` and `scope` remain in English |
 
 ### Provider presets
 
@@ -146,7 +146,7 @@ Allowed values: `auto`, `en`, `zh-cn`, `zh-tw`, `ja`, `ko`, `es`, `fr`, `de`, `p
 Running the command sends the full staged diff, system prompt, and model id to the final request URL of the selected provider. Use this only when allowed by your organization policy, and make sure the Base URL and its operator are trusted.
 
 - `aiCommit.apiKey` is sensitive. Do not put real keys in a committed `.vscode/settings.json`.
-- API keys are stored in VS Code machine-scope settings, not SecretStorage.
+- API keys are stored in VS Code machine-scope settings, not SecretStorage, and are not synchronized.
 - The extension does not log API keys, staged diffs, request bodies, or raw provider responses.
 - Default HTTP endpoints for Ollama and LM Studio point at `localhost` only. Do not send sensitive diffs to untrusted remote cleartext HTTP URLs.
 - A custom Base URL receives the full staged diff; the extension cannot verify whether a proxy stores or forwards that data.

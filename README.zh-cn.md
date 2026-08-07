@@ -21,7 +21,7 @@ fix(rtc): 修复房间退出状态同步问题
 1. 在 VS Code 中打开 Git 仓库。
 2. 使用 `git add` 或 Source Control 面板暂存需要提交的变更。
 3. 配置 LLM Provider、API Key 和模型。
-4. 点击 Source Control 面板顶部的 AI Commit 按钮，或通过命令面板执行 `AI Commit: Generate Message`。
+4. 点击 Source Control 面板顶部的 AI Commit 按钮，或通过命令面板执行 `AI 提交：生成 Commit 提交信息`（英文界面为 `AI Commit: Generate Commit Message`）。
 5. 检查 Git 提交输入框中的结果，再通过自己的 Git 工作流提交。
 
 扩展会同时保留一份剪贴板副本，但不会执行 `git commit` 或修改暂存区。提交输入框已有内容时，会先询问是否覆盖；取消后不会请求 LLM。
@@ -46,11 +46,11 @@ fix(rtc): 修复房间退出状态同步问题
 
 | 设置 | 必填 | 说明 |
 | --- | --- | --- |
-| `aiCommit.provider` | 是 | LLM Provider，默认 `openai-compatible` |
-| `aiCommit.commitLanguage` | 否 | Commit description 语言，默认 `auto`；支持在 User 或 Workspace 设置中覆盖 |
-| `aiCommit.baseUrl` | 视 Provider 而定 | 留空使用预设地址；Azure OpenAI 必填 |
-| `aiCommit.apiKey` | 视 Provider 而定 | 云端 Provider 必填；Ollama、LM Studio 可留空；按 machine scope 保存 |
-| `aiCommit.model` | 是 | Provider 接受的模型或 Azure 部署标识 |
+| `aiCommit.provider` | 是 | 用于生成提交信息的 AI Provider，默认 `openai-compatible` |
+| `aiCommit.baseUrl` | 视 Provider 而定 | 可选的 API 基础 URL；留空使用预设端点，Azure OpenAI 必填 |
+| `aiCommit.apiKey` | 视 Provider 而定 | 云端 Provider 必填；Ollama、LM Studio 可留空；保存在 VS Code machine scope 设置中，不使用 SecretStorage，也不会同步 |
+| `aiCommit.model` | 是 | 用于生成提交信息的模型 ID，或 Azure OpenAI 部署名称 |
+| `aiCommit.commitLanguage` | 否 | Commit description 语言，默认 `auto`；`type` 和 `scope` 始终使用英文 |
 
 ### Provider 预设
 
@@ -146,7 +146,7 @@ LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服
 执行命令会把完整 staged diff、系统 Prompt 和模型标识发送到所选 Provider 的最终请求地址。请只在组织策略允许时使用，并确认 Base URL 及其运营方可信。
 
 - `aiCommit.apiKey` 是敏感配置。不要将真实密钥写入会提交的 `.vscode/settings.json`。
-- API Key 当前存储在 VS Code machine scope 设置中，并非 VS Code SecretStorage。
+- API Key 当前存储在 VS Code machine scope 设置中，并非 VS Code SecretStorage，也不会同步。
 - 扩展不会记录 API Key、staged diff、请求正文或 Provider 原始响应。
 - Ollama 和 LM Studio 的默认 HTTP 地址仅指向 `localhost`。不要把敏感 diff 发送到不可信的远程明文 HTTP 地址。
 - 自定义 Base URL 会接收完整 staged diff，扩展无法验证代理是否保存或转发数据。
