@@ -92,7 +92,7 @@ suite('Configuration', () => {
 	test('rejects a cloud provider without an API key', () => {
 		assert.throws(
 			() => loadConfiguration(settings({ provider: 'gemini', model: 'gemini-model' })),
-			/Google Gemini.*Set API Key/,
+			/Google Gemini/,
 		);
 	});
 

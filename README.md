@@ -1,6 +1,6 @@
-# AI Commit Assistant
+# StagedCraft AI
 
-[English](README.md) | [中文](README.zh-cn.md)
+[English](README.md) | [中文](README.zh-cn.md) | [Privacy Policy](PRIVACY.md)
 
 Generate Conventional Commit messages from your staged Git diff using cloud or local LLM providers. The result is written into the Git commit input box and copied to the clipboard.
 
@@ -20,8 +20,8 @@ fix(rtc): sync room leave state on exit
 
 1. Open a Git repository in VS Code.
 2. Stage the changes you want to commit (`git add` or the Source Control panel).
-3. Configure the LLM provider and model, then run `AI Commit: Set API Key` for providers that require authentication.
-4. Click the AI Commit button at the top of the Source Control panel, or run `AI Commit: Generate Commit Message` from the Command Palette.
+3. Configure the LLM provider and model, then run `StagedCraft AI: Set API Key` for providers that require authentication.
+4. Click the StagedCraft AI button at the top of the Source Control panel, or run `StagedCraft AI: Generate Commit Message` from the Command Palette.
 5. Review the message in the Git commit input box, then commit with your usual workflow.
 
 The extension also copies the message to the clipboard. It never runs `git commit` or changes the staging area. If the commit input already has text, you will be asked whether to overwrite it; canceling skips the LLM request.
@@ -55,9 +55,9 @@ Provider, Base URL, and model are machine-scoped settings, so workspace configur
 
 ### API key management
 
-Select the target provider, then run `AI Commit: Set API Key` from the Command Palette. The input is masked and the key is stored separately for each provider in VS Code SecretStorage. Run `AI Commit: Clear API Key` to remove the key for the currently selected provider.
+Select the target provider, then run `StagedCraft AI: Set API Key` from the Command Palette. The input is masked and the key is stored separately for each provider in VS Code SecretStorage. Run `StagedCraft AI: Clear API Key` to remove the key for the currently selected provider.
 
-Cloud providers require a stored key. Ollama and LM Studio only need one when the local server enables Bearer authentication. Existing `aiCommit.apiKey` values from earlier versions are migrated to the selected provider's SecretStorage entry and removed from VS Code settings on first use.
+Cloud providers require a stored key. Ollama and LM Studio only need one when the local server enables Bearer authentication. If a required key is missing when you generate a message, the error notification provides a direct action to store it securely.
 
 ### Provider presets
 
@@ -128,7 +128,7 @@ Ollama connects to a local service by default and does not require an API key:
 }
 ```
 
-LM Studio works the same way with provider `lm-studio`. If a local server requires a Bearer token, select that provider and run `AI Commit: Set API Key`.
+LM Studio works the same way with provider `lm-studio`. If a local server requires a Bearer token, select that provider and run `StagedCraft AI: Set API Key`.
 
 A user-configured `aiCommit.baseUrl` always overrides the preset URL, which is useful for enterprise proxies, private deployments, or compatible gateways.
 
@@ -146,10 +146,11 @@ Allowed values: `auto`, `en`, `zh-cn`, `zh-tw`, `ja`, `ko`, `es`, `fr`, `de`, `p
 
 ## Data and credential safety
 
+See the [StagedCraft AI Privacy Policy](PRIVACY.md) for complete data-processing and third-party provider disclosures.
+
 Running the command sends the full staged diff, system prompt, and model id to the final request URL of the selected provider. Use this only when allowed by your organization policy, and make sure the Base URL and its operator are trusted.
 
 - API keys are stored per provider in VS Code SecretStorage, are not written to `settings.json`, and are not synchronized.
-- The legacy plaintext `aiCommit.apiKey` setting is removed after a successful one-time migration.
 - The extension does not log API keys, staged diffs, request bodies, or raw provider responses.
 - Default HTTP endpoints for Ollama and LM Studio point at `localhost` only. Do not send sensitive diffs to untrusted remote cleartext HTTP URLs.
 - A custom Base URL receives the full staged diff; the extension cannot verify whether a proxy stores or forwards that data.

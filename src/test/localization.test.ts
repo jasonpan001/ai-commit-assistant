@@ -11,6 +11,28 @@ import {
 const projectRoot = resolve(__dirname, '../..');
 
 suite('Localization', () => {
+	test('keeps the StagedCraft AI brand aligned across locales and documentation', () => {
+		for (const locale of ['default', ...localizedLocales()]) {
+			const suffix = locale === 'default' ? '' : `.${locale}`;
+			const messages = readJson(`package.nls${suffix}.json`);
+			assert.strictEqual(messages['extension.displayName'], 'StagedCraft AI', locale);
+			assert.strictEqual(messages['configuration.title'], 'StagedCraft AI', locale);
+			assert.ok(messages['command.generateMessage.title'].startsWith('StagedCraft AI'), locale);
+			assert.ok(messages['command.setApiKey.title'].startsWith('StagedCraft AI'), locale);
+			assert.ok(messages['command.clearApiKey.title'].startsWith('StagedCraft AI'), locale);
+		}
+
+		for (const readme of ['README.md', 'README.zh-cn.md']) {
+			const content = readFileSync(resolve(projectRoot, readme), 'utf8');
+			assert.match(content, /^# StagedCraft AI$/m, readme);
+			assert.match(content, /\[.*(?:Privacy Policy|隐私政策).*\]\(PRIVACY\.md\)/, readme);
+		}
+		assert.match(
+			readFileSync(resolve(projectRoot, 'PRIVACY.md'), 'utf8'),
+			/^# StagedCraft AI Privacy Policy$/m,
+		);
+	});
+
 	test('maps VS Code locales to commit description languages', () => {
 		const cases: ReadonlyArray<readonly [string, string]> = [
 			['en', 'English'],
@@ -107,8 +129,7 @@ suite('Localization', () => {
 		assert.strictEqual(properties['aiCommit.provider'].scope, 'machine');
 		assert.strictEqual(properties['aiCommit.baseUrl'].scope, 'machine');
 		assert.strictEqual(properties['aiCommit.model'].scope, 'machine');
-		assert.strictEqual(properties['aiCommit.apiKey'].scope, 'machine');
-		assert.match(properties['aiCommit.apiKey'].markdownDeprecationMessage, /^%[^%]+%$/);
+		assert.strictEqual(properties['aiCommit.apiKey'], undefined);
 	});
 
 	test('contributes API key management commands', () => {
@@ -116,9 +137,11 @@ suite('Localization', () => {
 			readFileSync(resolve(projectRoot, 'package.json'), 'utf8'),
 		) as PackageManifest;
 		const commands = packageJson.contributes.commands;
+		const configuration = packageJson.contributes.configuration.properties;
 
 		assert.ok(commands.some(command => command.command === 'aiCommit.setApiKey'));
 		assert.ok(commands.some(command => command.command === 'aiCommit.clearApiKey'));
+		assert.strictEqual(configuration['aiCommit.apiKey'], undefined);
 	});
 
 	test('contributes the generate command to the Git SCM title toolbar', () => {
@@ -151,7 +174,6 @@ interface PackageManifest {
 				title: string;
 				order: number;
 				scope: string;
-				markdownDeprecationMessage: string;
 			}> & {
 				'aiCommit.commitLanguage': {
 					title: string;

@@ -8,11 +8,6 @@ export interface SecretStorageAdapter {
 	delete(key: string): PromiseLike<void>;
 }
 
-export interface LegacyApiKeySettings {
-	read(): string | undefined;
-	clear(): PromiseLike<void>;
-}
-
 export interface CredentialStore {
 	get(provider: ProviderName): Promise<string>;
 	store(provider: ProviderName, apiKey: string): Promise<void>;
@@ -21,43 +16,16 @@ export interface CredentialStore {
 
 export function createCredentialStore(
 	secrets: SecretStorageAdapter,
-	legacySettings: LegacyApiKeySettings,
 ): CredentialStore {
 	return {
 		async get(provider) {
-			const storedApiKey = (await secrets.get(secretKey(provider)))?.trim() ?? '';
-			const legacyValue = legacySettings.read();
-			const legacyApiKey = legacyValue?.trim() ?? '';
-
-			if (storedApiKey) {
-				if (legacyValue !== undefined) {
-					await legacySettings.clear();
-				}
-				return storedApiKey;
-			}
-
-			if (!legacyApiKey) {
-				if (legacyValue !== undefined) {
-					await legacySettings.clear();
-				}
-				return '';
-			}
-
-			await secrets.store(secretKey(provider), legacyApiKey);
-			await legacySettings.clear();
-			return legacyApiKey;
+			return (await secrets.get(secretKey(provider)))?.trim() ?? '';
 		},
 		async store(provider, apiKey) {
 			await secrets.store(secretKey(provider), apiKey.trim());
-			if (legacySettings.read() !== undefined) {
-				await legacySettings.clear();
-			}
 		},
 		async delete(provider) {
 			await secrets.delete(secretKey(provider));
-			if (legacySettings.read() !== undefined) {
-				await legacySettings.clear();
-			}
 		},
 	};
 }

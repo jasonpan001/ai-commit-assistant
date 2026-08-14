@@ -140,14 +140,6 @@
           "scope": "machine",
           "description": "%configuration.model.description%"
         },
-        "aiCommit.apiKey": {
-          "title": "%configuration.legacyApiKey.title%",
-          "type": "string",
-          "order": 90,
-          "default": "",
-          "scope": "machine",
-          "markdownDeprecationMessage": "%configuration.legacyApiKey.description%"
-        },
         "aiCommit.commitLanguage": {
           "title": "%configuration.commitLanguage.title%",
           "type": "string",

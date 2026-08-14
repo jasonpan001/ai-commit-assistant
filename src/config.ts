@@ -1,4 +1,4 @@
-import { UserFacingError } from './errors';
+import { MissingApiKeyError, UserFacingError } from './errors';
 import {
 	CommitLanguagePreference,
 	isCommitLanguagePreference,
@@ -39,7 +39,7 @@ export function loadConfiguration(settings: SettingsReader, apiKey = ''): AiComm
 
 	const normalizedApiKey = apiKey.trim();
 	if (provider.requiresApiKey && !normalizedApiKey) {
-		throw new UserFacingError(localize('missingApiKey', provider.label));
+		throw new MissingApiKeyError(localize('missingApiKey', provider.label));
 	}
 
 	const model = readString(settings, 'model');

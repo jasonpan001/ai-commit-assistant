@@ -1,7 +1,7 @@
 import * as assert from 'node:assert';
 import { executeGenerateMessageCommand, GenerateCommandDependencies } from '../command';
 import { AiCommitConfiguration } from '../config';
-import { UserFacingError } from '../errors';
+import { MissingApiKeyError, UserFacingError } from '../errors';
 
 const configuration: AiCommitConfiguration = {
 	provider: 'openai-compatible',
@@ -108,12 +108,27 @@ suite('Generate command workflow', () => {
 		assert.deepStrictEqual(state.clipboardWrites, []);
 		assert.deepStrictEqual(state.errorMessages, ['无法确定仓库。']);
 	});
+
+	test('offers the API key setup action when a required key is missing', async () => {
+		const state = createState();
+		const commandDependencies = dependencies(state);
+		commandDependencies.loadConfiguration = () => {
+			throw new MissingApiKeyError('No API key is stored for OpenAI.');
+		};
+
+		await executeGenerateMessageCommand(commandDependencies);
+
+		assert.deepStrictEqual(state.missingApiKeyMessages, ['No API key is stored for OpenAI.']);
+		assert.deepStrictEqual(state.errorMessages, []);
+		assert.strictEqual(state.providerCalls, 0);
+	});
 });
 
 interface CommandState {
 	clipboardWrites: string[];
 	informationMessages: string[];
 	errorMessages: string[];
+	missingApiKeyMessages: string[];
 	repositoryRead: string | undefined;
 	providerCalls: number;
 	promptSystem: string | undefined;
@@ -129,6 +144,7 @@ function createState(): CommandState {
 		clipboardWrites: [],
 		informationMessages: [],
 		errorMessages: [],
+		missingApiKeyMessages: [],
 		repositoryRead: undefined,
 		providerCalls: 0,
 		promptSystem: undefined,
@@ -175,6 +191,9 @@ function dependencies(state: CommandState): GenerateCommandDependencies {
 		},
 		showError: async message => {
 			state.errorMessages.push(message);
+		},
+		showMissingApiKey: async message => {
+			state.missingApiKeyMessages.push(message);
 		},
 	};
 }

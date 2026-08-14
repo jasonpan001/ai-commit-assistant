@@ -14,14 +14,7 @@ export const CLEAR_API_KEY_COMMAND = 'aiCommit.clearApiKey';
 
 export function activate(context: vscode.ExtensionContext): void {
 	const gitInput = createGitInputClient();
-	const credentials = createCredentialStore(context.secrets, {
-		read: () => readLegacyApiKey(),
-		clear: () => vscode.workspace.getConfiguration('aiCommit').update(
-			'apiKey',
-			undefined,
-			vscode.ConfigurationTarget.Global,
-		),
-	});
+	const credentials = createCredentialStore(context.secrets);
 	const generateMessage = vscode.commands.registerCommand(GENERATE_MESSAGE_COMMAND, () =>
 		executeGenerateMessageCommand({
 			resolveRepository: () => gitInput.resolveRepository(...getWorkspaceSelection()),
@@ -42,6 +35,12 @@ export function activate(context: vscode.ExtensionContext): void {
 			},
 			showError: async message => {
 				await vscode.window.showErrorMessage(message);
+			},
+			showMissingApiKey: async message => {
+				const setApiKey = localize('setApiKeyAction');
+				if (await vscode.window.showErrorMessage(message, setApiKey) === setApiKey) {
+					await executeSetApiKeyCommand(credentials);
+				}
 			},
 		}),
 	);
@@ -85,11 +84,6 @@ async function executeClearApiKeyCommand(credentials: CredentialStore): Promise<
 	} catch {
 		await vscode.window.showErrorMessage(localize('credentialOperationFailed'));
 	}
-}
-
-function readLegacyApiKey(): string | undefined {
-	const value = vscode.workspace.getConfiguration('aiCommit').inspect<unknown>('apiKey')?.globalValue;
-	return typeof value === 'string' ? value : undefined;
 }
 
 function getWorkspaceSelection(): [string | undefined, string[]] {
