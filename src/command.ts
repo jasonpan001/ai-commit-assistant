@@ -1,12 +1,12 @@
 import { AiCommitConfiguration } from './config';
 import { buildCommitPrompt, normalizeCommitMessage } from './commitMessage';
-import { getUserFacingMessage } from './errors';
+import { getUserFacingMessage, MissingApiKeyError } from './errors';
 import { localize, resolveCommitLanguage } from './localization';
 import { LlmProvider } from './providers';
 
 export interface GenerateCommandDependencies {
 	resolveRepository(): string | Promise<string>;
-	loadConfiguration(): AiCommitConfiguration;
+	loadConfiguration(): AiCommitConfiguration | Promise<AiCommitConfiguration>;
 	readStagedDiff(repository: string): Promise<string>;
 	createProvider(configuration: AiCommitConfiguration): LlmProvider;
 	getLocale(): string;
@@ -16,6 +16,7 @@ export interface GenerateCommandDependencies {
 	writeClipboard(message: string): Promise<void>;
 	showInformation(message: string): Promise<void>;
 	showError(message: string): Promise<void>;
+	showMissingApiKey(message: string): Promise<void>;
 }
 
 export async function executeGenerateMessageCommand(dependencies: GenerateCommandDependencies): Promise<void> {
@@ -25,7 +26,7 @@ export async function executeGenerateMessageCommand(dependencies: GenerateComman
 		if (existingMessage.trim() && !await dependencies.confirmCommitInputReplacement()) {
 			return;
 		}
-		const configuration = dependencies.loadConfiguration();
+		const configuration = await dependencies.loadConfiguration();
 		const diff = await dependencies.readStagedDiff(repository);
 		const provider = dependencies.createProvider(configuration);
 		const outputLanguage = resolveCommitLanguage(
@@ -45,6 +46,10 @@ export async function executeGenerateMessageCommand(dependencies: GenerateComman
 		await dependencies.writeClipboard(message);
 		await dependencies.showInformation(localize('generatedAndInserted', message));
 	} catch (error) {
+		if (error instanceof MissingApiKeyError) {
+			await dependencies.showMissingApiKey(error.message);
+			return;
+		}
 		await dependencies.showError(getUserFacingMessage(error));
 	}
 }
