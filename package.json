@@ -3,7 +3,7 @@
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
   "version": "0.0.1",
-  "publisher": "jasonpan001",
+  "publisher": "StagedCraftAI",
   "license": "GPL-3.0-only",
   "icon": "images/icon.png",
   "galleryBanner": {

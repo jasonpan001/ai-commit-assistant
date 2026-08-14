@@ -99,6 +99,14 @@ suite('Localization', () => {
 		}
 	});
 
+	test('uses the Marketplace publisher identifier', () => {
+		const packageJson = JSON.parse(
+			readFileSync(resolve(projectRoot, 'package.json'), 'utf8'),
+		) as PackageManifest;
+
+		assert.strictEqual(packageJson.publisher, 'StagedCraftAI');
+	});
+
 	test('declares the complete commit language setting in the manifest', () => {
 		const packageJson = JSON.parse(
 			readFileSync(resolve(projectRoot, 'package.json'), 'utf8'),
@@ -157,6 +165,7 @@ suite('Localization', () => {
 });
 
 interface PackageManifest {
+	publisher: string;
 	contributes: {
 		commands: Array<{
 			command: string;
