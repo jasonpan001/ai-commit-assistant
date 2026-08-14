@@ -37,7 +37,9 @@
     "ollama"
   ],
   "activationEvents": [
-    "onCommand:aiCommit.generateMessage"
+    "onCommand:aiCommit.generateMessage",
+    "onCommand:aiCommit.setApiKey",
+    "onCommand:aiCommit.clearApiKey"
   ],
   "main": "./dist/extension.js",
   "l10n": "./l10n",
@@ -47,6 +49,14 @@
         "command": "aiCommit.generateMessage",
         "title": "%command.generateMessage.title%",
         "icon": "$(sparkle)"
+      },
+      {
+        "command": "aiCommit.setApiKey",
+        "title": "%command.setApiKey.title%"
+      },
+      {
+        "command": "aiCommit.clearApiKey",
+        "title": "%command.clearApiKey.title%"
       }
     ],
     "menus": {
@@ -111,6 +121,7 @@
             "%configuration.provider.lmStudio%"
           ],
           "default": "openai-compatible",
+          "scope": "machine",
           "description": "%configuration.provider.description%"
         },
         "aiCommit.baseUrl": {
@@ -118,27 +129,29 @@
           "type": "string",
           "order": 20,
           "default": "",
-          "description": "%configuration.baseUrl.description%"
-        },
-        "aiCommit.apiKey": {
-          "title": "%configuration.apiKey.title%",
-          "type": "string",
-          "order": 30,
-          "default": "",
           "scope": "machine",
-          "markdownDescription": "%configuration.apiKey.description%"
+          "description": "%configuration.baseUrl.description%"
         },
         "aiCommit.model": {
           "title": "%configuration.model.title%",
           "type": "string",
-          "order": 40,
+          "order": 30,
           "default": "",
+          "scope": "machine",
           "description": "%configuration.model.description%"
+        },
+        "aiCommit.apiKey": {
+          "title": "%configuration.legacyApiKey.title%",
+          "type": "string",
+          "order": 90,
+          "default": "",
+          "scope": "machine",
+          "markdownDeprecationMessage": "%configuration.legacyApiKey.description%"
         },
         "aiCommit.commitLanguage": {
           "title": "%configuration.commitLanguage.title%",
           "type": "string",
-          "order": 50,
+          "order": 40,
           "enum": [
             "auto",
             "en",

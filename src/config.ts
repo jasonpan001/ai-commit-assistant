@@ -25,16 +25,21 @@ export interface SettingsReader {
 	get<T>(section: string): T | undefined;
 }
 
-export function loadConfiguration(settings: SettingsReader): AiCommitConfiguration {
+export function readProvider(settings: SettingsReader): ProviderName {
 	const providerValue = readString(settings, 'provider') || 'openai-compatible';
 	if (!isProviderName(providerValue)) {
 		throw new UserFacingError(localize('unsupportedProvider', SUPPORTED_PROVIDERS.join(', ')));
 	}
+	return providerValue;
+}
+
+export function loadConfiguration(settings: SettingsReader, apiKey = ''): AiCommitConfiguration {
+	const providerValue = readProvider(settings);
 	const provider = getProviderDefinition(providerValue);
 
-	const apiKey = readString(settings, 'apiKey');
-	if (provider.requiresApiKey && !apiKey) {
-		throw new UserFacingError(localize('missingApiKey'));
+	const normalizedApiKey = apiKey.trim();
+	if (provider.requiresApiKey && !normalizedApiKey) {
+		throw new UserFacingError(localize('missingApiKey', provider.label));
 	}
 
 	const model = readString(settings, 'model');
@@ -49,7 +54,7 @@ export function loadConfiguration(settings: SettingsReader): AiCommitConfigurati
 	return {
 		provider: providerValue,
 		baseUrl,
-		apiKey,
+		apiKey: normalizedApiKey,
 		model,
 		commitLanguage: readCommitLanguage(settings),
 	};

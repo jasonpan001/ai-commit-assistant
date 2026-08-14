@@ -22,9 +22,8 @@ suite('Configuration', () => {
 		test(`uses the ${provider} default base URL`, () => {
 			const configuration = loadConfiguration(settings({
 				provider,
-				apiKey: provider === 'ollama' || provider === 'lm-studio' ? '' : ' test-key ',
 				model: ' test-model ',
-			}));
+			}), provider === 'ollama' || provider === 'lm-studio' ? '' : ' test-key ');
 
 			assert.strictEqual(configuration.baseUrl, expectedBaseUrl);
 			assert.strictEqual(configuration.apiKey, provider === 'ollama' || provider === 'lm-studio' ? '' : 'test-key');
@@ -33,7 +32,7 @@ suite('Configuration', () => {
 	}
 
 	test('keeps openai-compatible as the default provider', () => {
-		const configuration = loadConfiguration(settings({ apiKey: 'key', model: 'model' }));
+		const configuration = loadConfiguration(settings({ model: 'model' }), 'key');
 
 		assert.strictEqual(configuration.provider, 'openai-compatible');
 		assert.strictEqual(configuration.commitLanguage, 'auto');
@@ -41,20 +40,18 @@ suite('Configuration', () => {
 
 	test('accepts a supported commit language preference', () => {
 		const configuration = loadConfiguration(settings({
-			apiKey: 'key',
 			model: 'model',
 			commitLanguage: 'zh-cn',
-		}));
+		}), 'key');
 
 		assert.strictEqual(configuration.commitLanguage, 'zh-cn');
 	});
 
 	test('falls back to auto for an unsupported commit language preference', () => {
 		const configuration = loadConfiguration(settings({
-			apiKey: 'key',
 			model: 'model',
 			commitLanguage: 'unknown',
-		}));
+		}), 'key');
 
 		assert.strictEqual(configuration.commitLanguage, 'auto');
 	});
@@ -63,16 +60,15 @@ suite('Configuration', () => {
 		const configuration = loadConfiguration(settings({
 			provider: 'gemini',
 			baseUrl: ' https://proxy.example/v1beta ',
-			apiKey: 'key',
 			model: 'model',
-		}));
+		}), 'key');
 
 		assert.strictEqual(configuration.baseUrl, 'https://proxy.example/v1beta');
 	});
 
 	test('requires a resource base URL for Azure OpenAI', () => {
 		assert.throws(
-			() => loadConfiguration(settings({ provider: 'azure-openai', apiKey: 'key', model: 'deployment' })),
+			() => loadConfiguration(settings({ provider: 'azure-openai', model: 'deployment' }), 'key'),
 			/aiCommit\.baseUrl/,
 		);
 	});
@@ -81,9 +77,8 @@ suite('Configuration', () => {
 		const configuration = loadConfiguration(settings({
 			provider: 'azure-openai',
 			baseUrl: 'https://resource.openai.azure.com/openai/v1',
-			apiKey: 'key',
 			model: 'deployment',
-		}));
+		}), 'key');
 
 		assert.strictEqual(configuration.baseUrl, 'https://resource.openai.azure.com/openai/v1');
 	});
@@ -97,20 +92,20 @@ suite('Configuration', () => {
 	test('rejects a cloud provider without an API key', () => {
 		assert.throws(
 			() => loadConfiguration(settings({ provider: 'gemini', model: 'gemini-model' })),
-			/aiCommit\.apiKey/,
+			/Google Gemini.*Set API Key/,
 		);
 	});
 
 	test('rejects unsupported providers', () => {
 		assert.throws(
-			() => loadConfiguration(settings({ provider: 'unknown', apiKey: 'secret', model: 'model' })),
+			() => loadConfiguration(settings({ provider: 'unknown', model: 'model' }), 'secret'),
 			/provider/,
 		);
 	});
 
 	test('reports a missing model without exposing configured secrets', () => {
 		assert.throws(
-			() => loadConfiguration(settings({ provider: 'anthropic', apiKey: 'super-secret', model: '' })),
+			() => loadConfiguration(settings({ provider: 'anthropic', model: '' }), 'super-secret'),
 			(error: unknown) => error instanceof Error
 				&& error.message.includes('aiCommit.model')
 				&& !error.message.includes('super-secret'),

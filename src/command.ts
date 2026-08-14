@@ -6,7 +6,7 @@ import { LlmProvider } from './providers';
 
 export interface GenerateCommandDependencies {
 	resolveRepository(): string | Promise<string>;
-	loadConfiguration(): AiCommitConfiguration;
+	loadConfiguration(): AiCommitConfiguration | Promise<AiCommitConfiguration>;
 	readStagedDiff(repository: string): Promise<string>;
 	createProvider(configuration: AiCommitConfiguration): LlmProvider;
 	getLocale(): string;
@@ -25,7 +25,7 @@ export async function executeGenerateMessageCommand(dependencies: GenerateComman
 		if (existingMessage.trim() && !await dependencies.confirmCommitInputReplacement()) {
 			return;
 		}
-		const configuration = dependencies.loadConfiguration();
+		const configuration = await dependencies.loadConfiguration();
 		const diff = await dependencies.readStagedDiff(repository);
 		const provider = dependencies.createProvider(configuration);
 		const outputLanguage = resolveCommitLanguage(

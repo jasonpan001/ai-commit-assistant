@@ -98,13 +98,27 @@ suite('Localization', () => {
 		const settingIds = [
 			'aiCommit.provider',
 			'aiCommit.baseUrl',
-			'aiCommit.apiKey',
 			'aiCommit.model',
 			'aiCommit.commitLanguage',
 		] as const;
 
-		assert.deepStrictEqual(settingIds.map(id => properties[id].order), [10, 20, 30, 40, 50]);
+		assert.deepStrictEqual(settingIds.map(id => properties[id].order), [10, 20, 30, 40]);
 		assert.ok(settingIds.every(id => /^%[^%]+%$/.test(properties[id].title)));
+		assert.strictEqual(properties['aiCommit.provider'].scope, 'machine');
+		assert.strictEqual(properties['aiCommit.baseUrl'].scope, 'machine');
+		assert.strictEqual(properties['aiCommit.model'].scope, 'machine');
+		assert.strictEqual(properties['aiCommit.apiKey'].scope, 'machine');
+		assert.match(properties['aiCommit.apiKey'].markdownDeprecationMessage, /^%[^%]+%$/);
+	});
+
+	test('contributes API key management commands', () => {
+		const packageJson = JSON.parse(
+			readFileSync(resolve(projectRoot, 'package.json'), 'utf8'),
+		) as PackageManifest;
+		const commands = packageJson.contributes.commands;
+
+		assert.ok(commands.some(command => command.command === 'aiCommit.setApiKey'));
+		assert.ok(commands.some(command => command.command === 'aiCommit.clearApiKey'));
 	});
 
 	test('contributes the generate command to the Git SCM title toolbar', () => {
@@ -121,6 +135,10 @@ suite('Localization', () => {
 
 interface PackageManifest {
 	contributes: {
+		commands: Array<{
+			command: string;
+			title: string;
+		}>;
 		menus: {
 			'scm/title': Array<{
 				command: string;
@@ -132,6 +150,8 @@ interface PackageManifest {
 			properties: Record<string, {
 				title: string;
 				order: number;
+				scope: string;
+				markdownDeprecationMessage: string;
 			}> & {
 				'aiCommit.commitLanguage': {
 					title: string;

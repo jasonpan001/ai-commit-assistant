@@ -20,7 +20,7 @@ fix(rtc): 修复房间退出状态同步问题
 
 1. 在 VS Code 中打开 Git 仓库。
 2. 使用 `git add` 或 Source Control 面板暂存需要提交的变更。
-3. 配置 LLM Provider、API Key 和模型。
+3. 配置 LLM Provider 和模型；需要认证的 Provider 再执行 `AI 提交：设置 API Key`。
 4. 点击 Source Control 面板顶部的 AI Commit 按钮，或通过命令面板执行 `AI 提交：生成 Commit 提交信息`（英文界面为 `AI Commit: Generate Commit Message`）。
 5. 检查 Git 提交输入框中的结果，再通过自己的 Git 工作流提交。
 
@@ -48,9 +48,16 @@ fix(rtc): 修复房间退出状态同步问题
 | --- | --- | --- |
 | `aiCommit.provider` | 是 | 用于生成提交信息的 AI Provider，默认 `openai-compatible` |
 | `aiCommit.baseUrl` | 视 Provider 而定 | 可选的 API 基础 URL；留空使用预设端点，Azure OpenAI 必填 |
-| `aiCommit.apiKey` | 视 Provider 而定 | 云端 Provider 必填；Ollama、LM Studio 可留空；保存在 VS Code machine scope 设置中，不使用 SecretStorage，也不会同步 |
 | `aiCommit.model` | 是 | 用于生成提交信息的模型 ID，或 Azure OpenAI 部署名称 |
 | `aiCommit.commitLanguage` | 否 | Commit description 语言，默认 `auto`；`type` 和 `scope` 始终使用英文 |
+
+Provider、基础 URL 和模型均为 machine scope 设置，工作区配置无法重定向带认证信息的请求。Commit 语言仍为 window scope，可按工作区配置。
+
+### API Key 管理
+
+先选择目标 Provider，再从命令面板执行 `AI 提交：设置 API Key`。输入内容会被隐藏，API Key 按 Provider 分开保存在 VS Code SecretStorage 中。执行 `AI 提交：清除 API Key` 可删除当前 Provider 的密钥。
+
+云端 Provider 必须存储 API Key。Ollama 和 LM Studio 只有在本地服务启用 Bearer 认证时才需要设置。旧版本中的 `aiCommit.apiKey` 会在首次使用时迁移到当前 Provider 的 SecretStorage，并从 VS Code 设置中删除。
 
 ### Provider 预设
 
@@ -80,7 +87,6 @@ OpenAI Compatible 可用于任何实现 `POST {baseUrl}/chat/completions` 的服
 {
   "aiCommit.provider": "openai-compatible",
   "aiCommit.baseUrl": "https://llm.example.com/v1",
-  "aiCommit.apiKey": "YOUR_API_KEY",
   "aiCommit.model": "YOUR_MODEL_ID"
 }
 ```
@@ -90,7 +96,6 @@ Anthropic：
 ```json
 {
   "aiCommit.provider": "anthropic",
-  "aiCommit.apiKey": "YOUR_API_KEY",
   "aiCommit.model": "YOUR_CLAUDE_MODEL_ID"
 }
 ```
@@ -100,7 +105,6 @@ Google Gemini：
 ```json
 {
   "aiCommit.provider": "gemini",
-  "aiCommit.apiKey": "YOUR_GEMINI_API_KEY",
   "aiCommit.model": "YOUR_GEMINI_MODEL_ID"
 }
 ```
@@ -111,7 +115,6 @@ Azure OpenAI 的 Base URL 必须指向资源的 OpenAI v1 地址，`model` 填�
 {
   "aiCommit.provider": "azure-openai",
   "aiCommit.baseUrl": "https://YOUR_RESOURCE.openai.azure.com/openai/v1",
-  "aiCommit.apiKey": "YOUR_AZURE_OPENAI_API_KEY",
   "aiCommit.model": "YOUR_DEPLOYMENT_NAME"
 }
 ```
@@ -125,7 +128,7 @@ Ollama 默认连接本机服务，不要求 API Key：
 }
 ```
 
-LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服务启用了 Bearer Token，可同时配置 `aiCommit.apiKey`。
+LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服务启用了 Bearer Token，请选择该 Provider 后执行 `AI 提交：设置 API Key`。
 
 用户配置的 `aiCommit.baseUrl` 始终优先于预设地址，可用于企业代理、私有部署或兼容网关。
 
@@ -145,8 +148,8 @@ LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服
 
 执行命令会把完整 staged diff、系统 Prompt 和模型标识发送到所选 Provider 的最终请求地址。请只在组织策略允许时使用，并确认 Base URL 及其运营方可信。
 
-- `aiCommit.apiKey` 是敏感配置。不要将真实密钥写入会提交的 `.vscode/settings.json`。
-- API Key 当前存储在 VS Code machine scope 设置中，并非 VS Code SecretStorage，也不会同步。
+- API Key 按 Provider 保存在 VS Code SecretStorage 中，不会写入 `settings.json`，也不会同步。
+- 旧的明文 `aiCommit.apiKey` 设置会在一次性迁移成功后被删除。
 - 扩展不会记录 API Key、staged diff、请求正文或 Provider 原始响应。
 - Ollama 和 LM Studio 的默认 HTTP 地址仅指向 `localhost`。不要把敏感 diff 发送到不可信的远程明文 HTTP 地址。
 - 自定义 Base URL 会接收完整 staged diff，扩展无法验证代理是否保存或转发数据。

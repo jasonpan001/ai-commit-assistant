@@ -20,7 +20,7 @@ fix(rtc): sync room leave state on exit
 
 1. Open a Git repository in VS Code.
 2. Stage the changes you want to commit (`git add` or the Source Control panel).
-3. Configure the LLM provider, API key, and model.
+3. Configure the LLM provider and model, then run `AI Commit: Set API Key` for providers that require authentication.
 4. Click the AI Commit button at the top of the Source Control panel, or run `AI Commit: Generate Commit Message` from the Command Palette.
 5. Review the message in the Git commit input box, then commit with your usual workflow.
 
@@ -48,9 +48,16 @@ Output always keeps the `type(scope): description` shape; `type` and `scope` sta
 | --- | --- | --- |
 | `aiCommit.provider` | Yes | AI provider used to generate commit messages. Default: `openai-compatible` |
 | `aiCommit.baseUrl` | Depends on provider | Optional API base URL. Leave empty to use the preset endpoint; required for Azure OpenAI |
-| `aiCommit.apiKey` | Depends on provider | Required for cloud providers; optional for Ollama and LM Studio. Stored in machine-scoped VS Code settings, not SecretStorage, and not synchronized |
 | `aiCommit.model` | Yes | Model ID used for generation, or the Azure OpenAI deployment name |
 | `aiCommit.commitLanguage` | No | Commit description language. Default: `auto`; `type` and `scope` remain in English |
+
+Provider, Base URL, and model are machine-scoped settings, so workspace configuration cannot redirect authenticated requests. Commit language remains a window-scoped setting and may be configured per workspace.
+
+### API key management
+
+Select the target provider, then run `AI Commit: Set API Key` from the Command Palette. The input is masked and the key is stored separately for each provider in VS Code SecretStorage. Run `AI Commit: Clear API Key` to remove the key for the currently selected provider.
+
+Cloud providers require a stored key. Ollama and LM Studio only need one when the local server enables Bearer authentication. Existing `aiCommit.apiKey` values from earlier versions are migrated to the selected provider's SecretStorage entry and removed from VS Code settings on first use.
 
 ### Provider presets
 
@@ -80,7 +87,6 @@ OpenAI Compatible works with any service that implements `POST {baseUrl}/chat/co
 {
   "aiCommit.provider": "openai-compatible",
   "aiCommit.baseUrl": "https://llm.example.com/v1",
-  "aiCommit.apiKey": "YOUR_API_KEY",
   "aiCommit.model": "YOUR_MODEL_ID"
 }
 ```
@@ -90,7 +96,6 @@ Anthropic:
 ```json
 {
   "aiCommit.provider": "anthropic",
-  "aiCommit.apiKey": "YOUR_API_KEY",
   "aiCommit.model": "YOUR_CLAUDE_MODEL_ID"
 }
 ```
@@ -100,7 +105,6 @@ Google Gemini:
 ```json
 {
   "aiCommit.provider": "gemini",
-  "aiCommit.apiKey": "YOUR_GEMINI_API_KEY",
   "aiCommit.model": "YOUR_GEMINI_MODEL_ID"
 }
 ```
@@ -111,7 +115,6 @@ For Azure OpenAI, Base URL must point at the resource OpenAI v1 endpoint, and `m
 {
   "aiCommit.provider": "azure-openai",
   "aiCommit.baseUrl": "https://YOUR_RESOURCE.openai.azure.com/openai/v1",
-  "aiCommit.apiKey": "YOUR_AZURE_OPENAI_API_KEY",
   "aiCommit.model": "YOUR_DEPLOYMENT_NAME"
 }
 ```
@@ -125,7 +128,7 @@ Ollama connects to a local service by default and does not require an API key:
 }
 ```
 
-LM Studio works the same way with provider `lm-studio`. If the local server requires a Bearer token, also set `aiCommit.apiKey`.
+LM Studio works the same way with provider `lm-studio`. If a local server requires a Bearer token, select that provider and run `AI Commit: Set API Key`.
 
 A user-configured `aiCommit.baseUrl` always overrides the preset URL, which is useful for enterprise proxies, private deployments, or compatible gateways.
 
@@ -145,8 +148,8 @@ Allowed values: `auto`, `en`, `zh-cn`, `zh-tw`, `ja`, `ko`, `es`, `fr`, `de`, `p
 
 Running the command sends the full staged diff, system prompt, and model id to the final request URL of the selected provider. Use this only when allowed by your organization policy, and make sure the Base URL and its operator are trusted.
 
-- `aiCommit.apiKey` is sensitive. Do not put real keys in a committed `.vscode/settings.json`.
-- API keys are stored in VS Code machine-scope settings, not SecretStorage, and are not synchronized.
+- API keys are stored per provider in VS Code SecretStorage, are not written to `settings.json`, and are not synchronized.
+- The legacy plaintext `aiCommit.apiKey` setting is removed after a successful one-time migration.
 - The extension does not log API keys, staged diffs, request bodies, or raw provider responses.
 - Default HTTP endpoints for Ollama and LM Studio point at `localhost` only. Do not send sensitive diffs to untrusted remote cleartext HTTP URLs.
 - A custom Base URL receives the full staged diff; the extension cannot verify whether a proxy stores or forwards that data.
