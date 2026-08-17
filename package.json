@@ -2,7 +2,7 @@
   "name": "stagedcraft-ai",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "StagedCraftAI",
   "license": "GPL-3.0-only",
   "icon": "images/icon.png",
