@@ -1,6 +1,6 @@
 {
   "extension.displayName": "StagedCraft AI",
-  "extension.description": "클라우드 또는 로컬 LLM Provider를 사용하여 스테이징된 변경 사항에서 Conventional Commit 메시지를 생성합니다.",
+  "extension.description": "클라우드 또는 로컬 LLM Provider를 사용하여 커밋되지 않은 모든 변경 사항에서 Conventional Commit 메시지를 생성합니다.",
   "command.generateMessage.title": "StagedCraft AI: 커밋 메시지 생성",
   "command.setApiKey.title": "StagedCraft AI: API Key 설정",
   "command.clearApiKey.title": "StagedCraft AI: API Key 삭제",

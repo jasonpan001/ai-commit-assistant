@@ -1,6 +1,6 @@
 {
   "extension.displayName": "StagedCraft AI",
-  "extension.description": "使用云端或本地 LLM Provider，根据暂存区变更生成 Conventional Commit 提交信息。",
+  "extension.description": "使用云端或本地 LLM Provider，根据全部未提交变更生成 Conventional Commit 提交信息。",
   "command.generateMessage.title": "StagedCraft AI：生成 Commit 提交信息",
   "command.setApiKey.title": "StagedCraft AI：设置 API Key",
   "command.clearApiKey.title": "StagedCraft AI：清除 API Key",
