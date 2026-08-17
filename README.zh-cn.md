@@ -2,7 +2,7 @@
 
 [English](README.md) | [中文](README.zh-cn.md) | [隐私政策](PRIVACY.md)
 
-根据当前 Git 仓库的 staged diff 调用 LLM，生成 Conventional Commit message，写入 Git 提交输入框并复制到系统剪贴板。
+根据当前 Git 仓库的全部未提交变更调用 LLM，生成 Conventional Commit message，写入 Git 提交输入框并复制到系统剪贴板。
 
 默认格式：
 
@@ -19,12 +19,12 @@ fix(rtc): 修复房间退出状态同步问题
 ## 使用方式
 
 1. 在 VS Code 中打开 Git 仓库。
-2. 使用 `git add` 或 Source Control 面板暂存需要提交的变更。
+2. 检查需要描述的改动。扩展会自动包含已暂存、未暂存和未跟踪的文本文件，并排除忽略文件与二进制文件。
 3. 配置 LLM Provider 和模型；需要认证的 Provider 再执行 `StagedCraft AI：设置 API Key`。
 4. 点击 Source Control 面板顶部的 StagedCraft AI 按钮，或通过命令面板执行 `StagedCraft AI：生成 Commit 提交信息`（英文界面为 `StagedCraft AI: Generate Commit Message`）。
 5. 检查 Git 提交输入框中的结果，再通过自己的 Git 工作流提交。
 
-扩展会同时保留一份剪贴板副本，但不会执行 `git commit` 或修改暂存区。提交输入框已有内容时，会先询问是否覆盖；取消后不会请求 LLM。
+扩展会同时保留一份剪贴板副本，但不会执行 `git commit` 或修改暂存区。提交输入框已有内容时会直接替换，不再弹出确认。如果 LLM 请求期间输入框内容发生变化，扩展会保留较新的内容，并跳过本次生成结果的写入和复制。
 
 ## 多语言
 
@@ -148,12 +148,12 @@ LM Studio 使用方式相同，将 Provider 改为 `lm-studio`。如果本地服
 
 完整的数据处理方式与第三方 Provider 说明请参阅 [StagedCraft AI 隐私政策](PRIVACY.md)。
 
-执行命令会把完整 staged diff、系统 Prompt 和模型标识发送到所选 Provider 的最终请求地址。请只在组织策略允许时使用，并确认 Base URL 及其运营方可信。
+执行命令会把已暂存、未暂存和未跟踪文本变更的完整 diff，以及系统 Prompt 和模型标识发送到所选 Provider 的最终请求地址；忽略文件与二进制文件不会包含在内。请只在组织策略允许时使用，并确认 Base URL 及其运营方可信。
 
 - API Key 按 Provider 保存在 VS Code SecretStorage 中，不会写入 `settings.json`，也不会同步。
-- 扩展不会记录 API Key、staged diff、请求正文或 Provider 原始响应。
+- 扩展不会记录 API Key、Git diff、请求正文或 Provider 原始响应。
 - Ollama 和 LM Studio 的默认 HTTP 地址仅指向 `localhost`。不要把敏感 diff 发送到不可信的远程明文 HTTP 地址。
-- 自定义 Base URL 会接收完整 staged diff，扩展无法验证代理是否保存或转发数据。
+- 自定义 Base URL 会接收完整的已包含 Git diff，扩展无法验证代理是否保存或转发数据。
 
 ## MVP 限制
 

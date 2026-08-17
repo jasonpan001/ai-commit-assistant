@@ -1,6 +1,6 @@
 {
   "extension.displayName": "StagedCraft AI",
-  "extension.description": "Gere mensagens de Conventional Commits a partir de alterações preparadas usando provedores de LLM locais ou na nuvem.",
+  "extension.description": "Gere mensagens de Conventional Commits a partir de todas as alterações não confirmadas usando provedores de LLM locais ou na nuvem.",
   "command.generateMessage.title": "StagedCraft AI: gerar mensagem de commit",
   "command.setApiKey.title": "StagedCraft AI: definir chave de API",
   "command.clearApiKey.title": "StagedCraft AI: limpar chave de API",

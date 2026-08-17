@@ -1,6 +1,6 @@
 {
   "extension.displayName": "StagedCraft AI",
-  "extension.description": "使用雲端或本機 LLM Provider，根據暫存區變更產生 Conventional Commit 提交訊息。",
+  "extension.description": "使用雲端或本機 LLM Provider，根據全部未提交變更產生 Conventional Commit 提交訊息。",
   "command.generateMessage.title": "StagedCraft AI：產生 Commit 提交訊息",
   "command.setApiKey.title": "StagedCraft AI：設定 API Key",
   "command.clearApiKey.title": "StagedCraft AI：清除 API Key",

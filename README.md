@@ -2,7 +2,7 @@
 
 [English](README.md) | [中文](README.zh-cn.md) | [Privacy Policy](PRIVACY.md)
 
-Generate Conventional Commit messages from your staged Git diff using cloud or local LLM providers. The result is written into the Git commit input box and copied to the clipboard.
+Generate Conventional Commit messages from all uncommitted Git changes using cloud or local LLM providers. The result is written into the Git commit input box and copied to the clipboard.
 
 Default format:
 
@@ -19,12 +19,12 @@ fix(rtc): sync room leave state on exit
 ## How to use
 
 1. Open a Git repository in VS Code.
-2. Stage the changes you want to commit (`git add` or the Source Control panel).
+2. Review the changes you want to describe. Staged, unstaged, and untracked text files are included automatically; ignored and binary files are excluded.
 3. Configure the LLM provider and model, then run `StagedCraft AI: Set API Key` for providers that require authentication.
 4. Click the StagedCraft AI button at the top of the Source Control panel, or run `StagedCraft AI: Generate Commit Message` from the Command Palette.
 5. Review the message in the Git commit input box, then commit with your usual workflow.
 
-The extension also copies the message to the clipboard. It never runs `git commit` or changes the staging area. If the commit input already has text, you will be asked whether to overwrite it; canceling skips the LLM request.
+The extension also copies the message to the clipboard. It never runs `git commit` or changes the staging area. Existing commit input is replaced without a prompt. If the input changes while the LLM request is running, the extension leaves the newer text untouched and skips copying the generated result.
 
 ## Localization
 
@@ -148,12 +148,12 @@ Allowed values: `auto`, `en`, `zh-cn`, `zh-tw`, `ja`, `ko`, `es`, `fr`, `de`, `p
 
 See the [StagedCraft AI Privacy Policy](PRIVACY.md) for complete data-processing and third-party provider disclosures.
 
-Running the command sends the full staged diff, system prompt, and model id to the final request URL of the selected provider. Use this only when allowed by your organization policy, and make sure the Base URL and its operator are trusted.
+Running the command sends the full diff for staged, unstaged, and untracked text changes, together with the system prompt and model id, to the final request URL of the selected provider. Ignored and binary files are excluded. Use this only when allowed by your organization policy, and make sure the Base URL and its operator are trusted.
 
 - API keys are stored per provider in VS Code SecretStorage, are not written to `settings.json`, and are not synchronized.
-- The extension does not log API keys, staged diffs, request bodies, or raw provider responses.
+- The extension does not log API keys, Git diffs, request bodies, or raw provider responses.
 - Default HTTP endpoints for Ollama and LM Studio point at `localhost` only. Do not send sensitive diffs to untrusted remote cleartext HTTP URLs.
-- A custom Base URL receives the full staged diff; the extension cannot verify whether a proxy stores or forwards that data.
+- A custom Base URL receives the full included Git diff; the extension cannot verify whether a proxy stores or forwards that data.
 
 ## MVP limitations
 

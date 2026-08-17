@@ -12,42 +12,24 @@ const configuration: AiCommitConfiguration = {
 };
 
 suite('Generate command workflow', () => {
-	test('writes, copies and reports a valid generated message', async () => {
+	test('writes and copies a valid generated message without a success notification', async () => {
 		const state = createState();
 		await executeGenerateMessageCommand(dependencies(state));
 
 		assert.deepStrictEqual(state.clipboardWrites, ['fix(core): 修复暂存区生成逻辑']);
 		assert.deepStrictEqual(state.commitInputWrites, [{ repository: '/repo', message: 'fix(core): 修复暂存区生成逻辑' }]);
-		assert.deepStrictEqual(state.informationMessages, [
-			'Generated, added to the Git commit input, and copied: fix(core): 修复暂存区生成逻辑',
-		]);
 		assert.deepStrictEqual(state.errorMessages, []);
 		assert.strictEqual(state.repositoryRead, '/repo');
 		assert.strictEqual(state.providerCalls, 1);
 		assert.match(state.promptSystem ?? '', /Simplified Chinese/);
 	});
 
-	test('stops before reading Git when replacing an existing message is cancelled', async () => {
-		const state = createState();
-		state.existingCommitInput = 'hand-written message';
-		state.confirmReplacement = false;
-
-		await executeGenerateMessageCommand(dependencies(state));
-
-		assert.strictEqual(state.confirmationCalls, 1);
-		assert.strictEqual(state.repositoryRead, undefined);
-		assert.strictEqual(state.providerCalls, 0);
-		assert.deepStrictEqual(state.commitInputWrites, []);
-		assert.deepStrictEqual(state.clipboardWrites, []);
-	});
-
-	test('replaces an existing message after confirmation', async () => {
+	test('replaces an existing message without confirmation', async () => {
 		const state = createState();
 		state.existingCommitInput = 'hand-written message';
 
 		await executeGenerateMessageCommand(dependencies(state));
 
-		assert.strictEqual(state.confirmationCalls, 1);
 		assert.strictEqual(state.providerCalls, 1);
 		assert.strictEqual(state.commitInputWrites.length, 1);
 	});
@@ -55,24 +37,22 @@ suite('Generate command workflow', () => {
 	test('does not overwrite text entered while the provider request is running', async () => {
 		const state = createState();
 		state.commitInputDuringGeneration = 'typed while waiting';
-		state.confirmReplacement = false;
 
 		await executeGenerateMessageCommand(dependencies(state));
 
 		assert.strictEqual(state.providerCalls, 1);
-		assert.strictEqual(state.confirmationCalls, 1);
 		assert.deepStrictEqual(state.commitInputWrites, []);
 		assert.deepStrictEqual(state.clipboardWrites, []);
 	});
 
 	for (const failure of [
-		{ name: 'empty staged diff', message: '暂存区没有变更，请先执行 Git stage。' },
-		{ name: 'Git failure', message: '无法读取 Git 暂存区，请确认当前目录是有效仓库且 Git 可用。' },
+		{ name: 'empty Git diff', message: '仓库没有已暂存、未暂存或未跟踪的文本变更。' },
+		{ name: 'Git failure', message: '无法读取 Git 变更，请确认当前目录是有效仓库且 Git 可用。' },
 	]) {
 		test(`keeps the clipboard unchanged on ${failure.name}`, async () => {
 			const state = createState();
 			const commandDependencies = dependencies(state);
-			commandDependencies.readStagedDiff = async () => {
+			commandDependencies.readGitDiff = async () => {
 				throw new UserFacingError(failure.message);
 			};
 
@@ -126,15 +106,12 @@ suite('Generate command workflow', () => {
 
 interface CommandState {
 	clipboardWrites: string[];
-	informationMessages: string[];
 	errorMessages: string[];
 	missingApiKeyMessages: string[];
 	repositoryRead: string | undefined;
 	providerCalls: number;
 	promptSystem: string | undefined;
 	existingCommitInput: string;
-	confirmReplacement: boolean;
-	confirmationCalls: number;
 	commitInputWrites: Array<{ repository: string; message: string }>;
 	commitInputDuringGeneration: string | undefined;
 }
@@ -142,15 +119,12 @@ interface CommandState {
 function createState(): CommandState {
 	return {
 		clipboardWrites: [],
-		informationMessages: [],
 		errorMessages: [],
 		missingApiKeyMessages: [],
 		repositoryRead: undefined,
 		providerCalls: 0,
 		promptSystem: undefined,
 		existingCommitInput: '',
-		confirmReplacement: true,
-		confirmationCalls: 0,
 		commitInputWrites: [],
 		commitInputDuringGeneration: undefined,
 	};
@@ -162,14 +136,10 @@ function dependencies(state: CommandState): GenerateCommandDependencies {
 		loadConfiguration: () => configuration,
 		getLocale: () => 'en',
 		readCommitInput: async () => state.existingCommitInput,
-		confirmCommitInputReplacement: async () => {
-			state.confirmationCalls += 1;
-			return state.confirmReplacement;
-		},
 		writeCommitInput: async (repository, message) => {
 			state.commitInputWrites.push({ repository, message });
 		},
-		readStagedDiff: async repository => {
+		readGitDiff: async repository => {
 			state.repositoryRead = repository;
 			return 'diff';
 		},
@@ -185,9 +155,6 @@ function dependencies(state: CommandState): GenerateCommandDependencies {
 		}),
 		writeClipboard: async message => {
 			state.clipboardWrites.push(message);
-		},
-		showInformation: async message => {
-			state.informationMessages.push(message);
 		},
 		showError: async message => {
 			state.errorMessages.push(message);

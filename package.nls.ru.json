@@ -1,6 +1,6 @@
 {
   "extension.displayName": "StagedCraft AI",
-  "extension.description": "Создание сообщений Conventional Commits из подготовленных изменений с помощью облачных или локальных поставщиков LLM.",
+  "extension.description": "Создание сообщений Conventional Commits из всех незафиксированных изменений с помощью облачных или локальных поставщиков LLM.",
   "command.generateMessage.title": "StagedCraft AI: создать сообщение коммита",
   "command.setApiKey.title": "StagedCraft AI: задать ключ API",
   "command.clearApiKey.title": "StagedCraft AI: удалить ключ API",

@@ -1,6 +1,6 @@
 {
   "extension.displayName": "StagedCraft AI",
-  "extension.description": "Erstellt Conventional-Commit-Nachrichten aus bereitgestellten Änderungen mit Cloud- oder lokalen LLM-Anbietern.",
+  "extension.description": "Erstellt Conventional-Commit-Nachrichten aus allen nicht festgeschriebenen Änderungen mit Cloud- oder lokalen LLM-Anbietern.",
   "command.generateMessage.title": "StagedCraft AI: Commit-Nachricht erstellen",
   "command.setApiKey.title": "StagedCraft AI: API-Schlüssel festlegen",
   "command.clearApiKey.title": "StagedCraft AI: API-Schlüssel löschen",

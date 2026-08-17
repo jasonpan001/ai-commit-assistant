@@ -1,6 +1,6 @@
 # StagedCraft AI Privacy Policy
 
-Effective date: August 14, 2026
+Effective date: August 17, 2026
 
 This Privacy Policy explains how the StagedCraft AI Visual Studio Code extension (the "Extension") processes information when you use it.
 
@@ -15,7 +15,7 @@ This Privacy Policy explains how the StagedCraft AI Visual Studio Code extension
 
 When you generate a commit message, the Extension processes and sends the following information to the selected provider endpoint:
 
-- the full staged Git diff, which may contain source code, configuration, personal data, credentials, or other confidential information;
+- the full Git diff for staged, unstaged, and untracked text changes, which may contain source code, configuration, personal data, credentials, or other confidential information; ignored and binary files are excluded;
 - the system instruction used to request a Conventional Commit message;
 - the selected commit language; and
 - the configured model or deployment identifier.
@@ -28,11 +28,11 @@ If the selected provider requires authentication, its API key is sent only as an
 - Provider, base URL, model, and language preferences are stored using Visual Studio Code settings.
 - A generated commit message is written to the Git commit input and copied to the system clipboard.
 
-The Extension does not write API keys, staged diffs, request bodies, or raw provider responses to logs.
+The Extension does not write API keys, Git diffs, request bodies, or raw provider responses to logs.
 
 ## Third-party services
 
-Cloud providers and custom endpoints are independent third parties. Their collection, use, retention, and protection of request data are governed by their own terms and privacy policies. You are responsible for reviewing the policy of the selected provider and confirming that sending the staged diff is permitted by your organization.
+Cloud providers and custom endpoints are independent third parties. Their collection, use, retention, and protection of request data are governed by their own terms and privacy policies. You are responsible for reviewing the policy of the selected provider and confirming that sending the included Git changes is permitted by your organization.
 
 A custom Base URL receives the full request and authentication credential. Use only endpoints whose operators you trust. The Extension cannot determine whether a provider or proxy stores, analyzes, or forwards submitted data.
 
@@ -40,13 +40,13 @@ Ollama and LM Studio can be used with a local endpoint so that requests do not n
 
 ## Data retention
 
-The publisher does not collect or retain request content, API keys, staged diffs, generated messages, or usage data. Any retention performed by a selected provider or custom endpoint is controlled by that third party and is outside the publisher's control.
+The publisher does not collect or retain request content, API keys, Git diffs, generated messages, or usage data. Any retention performed by a selected provider or custom endpoint is controlled by that third party and is outside the publisher's control.
 
 ## Your choices
 
 You can:
 
-- review and limit staged changes before generating a message;
+- review and limit all uncommitted changes before generating a message;
 - use a local provider;
 - clear the selected provider's API key with `StagedCraft AI: Clear API Key`;
 - change or remove provider settings; or

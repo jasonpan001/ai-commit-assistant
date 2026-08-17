@@ -1,20 +1,18 @@
 import { AiCommitConfiguration } from './config';
 import { buildCommitPrompt, normalizeCommitMessage } from './commitMessage';
 import { getUserFacingMessage, MissingApiKeyError } from './errors';
-import { localize, resolveCommitLanguage } from './localization';
+import { resolveCommitLanguage } from './localization';
 import { LlmProvider } from './providers';
 
 export interface GenerateCommandDependencies {
 	resolveRepository(): string | Promise<string>;
 	loadConfiguration(): AiCommitConfiguration | Promise<AiCommitConfiguration>;
-	readStagedDiff(repository: string): Promise<string>;
+	readGitDiff(repository: string): Promise<string>;
 	createProvider(configuration: AiCommitConfiguration): LlmProvider;
 	getLocale(): string;
 	readCommitInput(repository: string): Promise<string>;
-	confirmCommitInputReplacement(): Promise<boolean>;
 	writeCommitInput(repository: string, message: string): Promise<void>;
 	writeClipboard(message: string): Promise<void>;
-	showInformation(message: string): Promise<void>;
 	showError(message: string): Promise<void>;
 	showMissingApiKey(message: string): Promise<void>;
 }
@@ -23,11 +21,8 @@ export async function executeGenerateMessageCommand(dependencies: GenerateComman
 	try {
 		const repository = await dependencies.resolveRepository();
 		const existingMessage = await dependencies.readCommitInput(repository);
-		if (existingMessage.trim() && !await dependencies.confirmCommitInputReplacement()) {
-			return;
-		}
 		const configuration = await dependencies.loadConfiguration();
-		const diff = await dependencies.readStagedDiff(repository);
+		const diff = await dependencies.readGitDiff(repository);
 		const provider = dependencies.createProvider(configuration);
 		const outputLanguage = resolveCommitLanguage(
 			dependencies.getLocale(),
@@ -36,15 +31,12 @@ export async function executeGenerateMessageCommand(dependencies: GenerateComman
 		const rawMessage = await provider.generate(buildCommitPrompt(diff, outputLanguage));
 		const message = normalizeCommitMessage(rawMessage);
 		const latestMessage = await dependencies.readCommitInput(repository);
-		if (latestMessage !== existingMessage
-			&& latestMessage.trim()
-			&& !await dependencies.confirmCommitInputReplacement()) {
+		if (latestMessage !== existingMessage) {
 			return;
 		}
 
 		await dependencies.writeCommitInput(repository, message);
 		await dependencies.writeClipboard(message);
-		await dependencies.showInformation(localize('generatedAndInserted', message));
 	} catch (error) {
 		if (error instanceof MissingApiKeyError) {
 			await dependencies.showMissingApiKey(error.message);

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { executeGenerateMessageCommand } from './command';
 import { loadConfiguration, readProvider } from './config';
 import { createCredentialStore, CredentialStore } from './credentials';
-import { readStagedDiff } from './git';
+import { readGitDiff } from './git';
 import { createGitInputClient } from './gitExtension';
 import { localize } from './localization';
 import { getProviderDefinition } from './providerCatalog';
@@ -23,16 +23,12 @@ export function activate(context: vscode.ExtensionContext): void {
 				const provider = readProvider(settings);
 				return loadConfiguration(settings, await credentials.get(provider));
 			},
-			readStagedDiff,
+			readGitDiff,
 			createProvider: createLlmProvider,
 			getLocale: () => vscode.env.language,
 			readCommitInput: repository => gitInput.read(repository),
-			confirmCommitInputReplacement: confirmCommitInputReplacement,
 			writeCommitInput: (repository, message) => gitInput.write(repository, message),
 			writeClipboard: async message => vscode.env.clipboard.writeText(message),
-			showInformation: async message => {
-				await vscode.window.showInformationMessage(message);
-			},
 			showError: async message => {
 				await vscode.window.showErrorMessage(message);
 			},
@@ -94,15 +90,6 @@ function getWorkspaceSelection(): [string | undefined, string[]] {
 	const workspaces = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath) ?? [];
 
 	return [activeWorkspace, workspaces];
-}
-
-async function confirmCommitInputReplacement(): Promise<boolean> {
-	const replace = localize('replaceCommitInput');
-	return vscode.window.showWarningMessage(
-		localize('commitInputNotEmpty'),
-		{ modal: true },
-		replace,
-	).then(selection => selection === replace);
 }
 
 export function deactivate(): void {}

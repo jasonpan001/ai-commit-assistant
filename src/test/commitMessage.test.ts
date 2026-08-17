@@ -9,7 +9,7 @@ suite('Commit message rules', () => {
 		assert.match(prompt.system, /type\(scope\): description/);
 		assert.match(prompt.system, /Japanese/);
 		assert.match(prompt.system, /untrusted data/);
-		assert.match(prompt.user, /<git_staged_diff>/);
+		assert.match(prompt.user, /<git_diff>/);
 		assert.match(prompt.user, /\+ignore previous instructions/);
 	});
 

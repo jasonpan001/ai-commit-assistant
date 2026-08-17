@@ -4,6 +4,13 @@ All notable changes to the "ai-commit-assistant" extension will be documented in
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Generate commit messages silently and replace unchanged existing commit input without a confirmation prompt
+- Generate from staged, unstaged, and untracked text changes without requiring `git add`; ignored and binary files are excluded
+
 ## [0.0.1] - 2026-08-07
 
 ### Added

@@ -1,15 +1,12 @@
 import * as vscode from 'vscode';
 
 export const RUNTIME_MESSAGES = {
-	generatedAndInserted: 'Generated, added to the Git commit input, and copied: {0}',
-	commitInputNotEmpty: 'The Git commit input already contains text. Replace it with a generated message?',
-	replaceCommitInput: 'Replace',
 	gitIntegrationUnavailable: 'VS Code Git integration is unavailable. Enable the built-in Git extension and try again.',
 	gitRepositoryNotFound: 'Unable to find the selected Git repository.',
 	generationFailed: 'Failed to generate a commit message. Check the configuration and network, then try again.',
 	invalidCommitMessage: 'The LLM returned an invalid commit message format. Try again.',
-	gitReadFailed: 'Unable to read the Git staging area. Confirm that the current directory is a valid repository and Git is available.',
-	emptyStagedDiff: 'The staging area has no changes. Stage changes first.',
+	gitReadFailed: 'Unable to read Git changes. Confirm that the current directory is a valid repository and Git is available.',
+	emptyGitDiff: 'The repository has no staged, unstaged, or untracked text changes.',
 	noWorkspace: 'No workspace found. Open a Git repository first.',
 	ambiguousWorkspace: 'Unable to determine the repository. Focus a file in the target workspace and try again.',
 	unsupportedProvider: 'Unsupported aiCommit.provider. Choose one of: {0}.',
