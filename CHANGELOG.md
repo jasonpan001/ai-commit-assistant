@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ## [Unreleased]
 
+## [0.0.2] - 2026-08-17
+
 ### Changed
 
 - Generate commit messages silently and replace unchanged existing commit input without a confirmation prompt
